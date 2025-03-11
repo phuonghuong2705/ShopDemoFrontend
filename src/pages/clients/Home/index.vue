@@ -5,7 +5,7 @@
                 <a-col style="width: 68%;"><Slider /></a-col>
                 <a-col style="width: 32%; max-height: 400px;">
                     <a-row>
-                        <div style="width: 100%; margin-bottom: 12px;">
+                        <div style="width: 100%; margin-bottom: 10.5px;">
                             <VideoBanner videoId="kFZo7yJ2ONg" />
                         </div>
                     </a-row>
@@ -16,6 +16,9 @@
                     </a-row>
                 </a-col>
             </a-row>
+            <a-row>
+                <ListProduct />
+            </a-row>
         </div>
     </div>
 </template>
@@ -25,6 +28,7 @@ import { onMounted, ref } from 'vue';
 import Slider from './Slider.vue';
 import VideoBanner from './VideoBanner.vue';
 import HomeBanner from './HomeBanner.vue';
+import ListProduct from '@/pages/clients/ListProduct/index.vue'
 
 const width = ref();
 const height = ref();

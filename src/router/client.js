@@ -12,7 +12,7 @@ const client = [
         children: [
             {
                 title: 'Home',
-                path: 'home',
+                path: '',
                 name: 'Home',
                 component: Home,
                 meta: {
