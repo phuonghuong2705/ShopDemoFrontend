@@ -28,7 +28,7 @@ import { onMounted, ref } from 'vue';
 import Slider from './Slider.vue';
 import VideoBanner from './VideoBanner.vue';
 import HomeBanner from './HomeBanner.vue';
-import ListProduct from '@/pages/clients/ListProduct/index.vue'
+import ListProduct from '@/pages/clients/ListProduct/LIstProductHome.vue'
 
 const width = ref();
 const height = ref();
