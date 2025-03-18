@@ -17,6 +17,9 @@
                 </a-col>
             </a-row>
             <a-row>
+                <div style="color: black;">Sản phẩm bán chạy</div>
+            </a-row>
+            <a-row>
                 <ListProduct />
             </a-row>
         </div>
@@ -35,13 +38,10 @@ const height = ref();
 
 const updateWidth = () => {
     width.value = window.innerWidth;
-    console.log(width.value);
-    
     return width.value;
 };
 const updateHeight = () => {
     height.value = window.innerHeight;
-    console.log(height.value);
     return height.value;
 };
 
