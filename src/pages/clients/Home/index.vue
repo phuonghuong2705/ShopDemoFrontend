@@ -17,6 +17,9 @@
                 </a-col>
             </a-row>
             <a-row>
+                <div style="color: black;">Sản phẩm bán chạy</div>
+            </a-row>
+            <a-row>
                 <ListProduct />
             </a-row>
         </div>
@@ -28,20 +31,17 @@ import { onMounted, ref } from 'vue';
 import Slider from './Slider.vue';
 import VideoBanner from './VideoBanner.vue';
 import HomeBanner from './HomeBanner.vue';
-import ListProduct from '@/pages/clients/ListProduct/index.vue'
+import ListProduct from '@/pages/clients/ListProduct/LIstProductHome.vue'
 
 const width = ref();
 const height = ref();
 
 const updateWidth = () => {
     width.value = window.innerWidth;
-    console.log(width.value);
-    
     return width.value;
 };
 const updateHeight = () => {
     height.value = window.innerHeight;
-    console.log(height.value);
     return height.value;
 };
 

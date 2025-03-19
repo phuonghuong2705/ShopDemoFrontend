@@ -1,7 +1,8 @@
 import Layout from "../pages/layouts/layout.vue";
 import Home from "../pages/clients/Home/index.vue";
-import ProduceTemplate from "../pages/clients/Product/index.vue";
-import Product from "../pages/clients/Product/Product.vue";
+import ProductDetail from "../pages/clients/ProductDetail/index.vue";
+import RouterListProduct from "../pages/clients/ListProduct/index.vue";
+import ListProduct from "@/components/clients/ListProduct/ListProduct.vue";
 import Cart from "../pages/clients/Cart/index.vue";
 import Login from "../pages/logins/Login.vue";
 import Register from "../pages/logins/Register.vue";
@@ -20,41 +21,50 @@ const client = [
                 },
             },
             {   
-                title: 'ProduceTemplate',
-                path: 'produce',
-                component: ProduceTemplate,
-                name: 'ProduceTemplate',
+                title: 'RouterListProduct',
+                path: 'product',
+                component: RouterListProduct,
+                name: 'RouterListProduct',
                 meta: {
                     title: 'Sản phẩm',
                 },
                 children: [
                     {
-                        title: 'Produce1',
+                        title: 'ListProduct',
+                        path: '', 
+                        name: 'ListProduct',
+                        component: ListProduct,
+                        meta: {
+                            title: 'Trí tuệ nhân tạo - Tích hợp'
+                        }
+                    },
+                    {
+                        title: 'ProductDetail',
                         path: 'produce1',
-                        name: 'Produce1',
-                        component: Product,
+                        name: 'ProductDetail',
+                        component: ProductDetail,
                         meta: {
-                            title: 'Produce1',
+                            title: 'ProductDetail',
                         },
                     },
-                    {
-                        title: 'Produce2',
-                        path: 'produce2',
-                        name: 'Produce2',
-                        component: Product,
-                        meta: {
-                            title: 'Produce2',
-                        },
-                    },
-                    {
-                        title: 'Produce3',
-                        path: 'produce3',
-                        name: 'Produce3',
-                        component: Product,
-                        meta: {
-                            title: 'Produce3',
-                        },
-                    },
+                //     {
+                //         title: 'Produce2',
+                //         path: 'produce2',
+                //         name: 'Produce2',
+                //         component: Product,
+                //         meta: {
+                //             title: 'Produce2',
+                //         },
+                //     },
+                //     {
+                //         title: 'Produce3',
+                //         path: 'produce3',
+                //         name: 'Produce3',
+                //         component: Product,
+                //         meta: {
+                //             title: 'Produce3',
+                //         },
+                //     },
                 ]
             },
             {   
