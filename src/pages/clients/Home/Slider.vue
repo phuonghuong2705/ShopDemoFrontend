@@ -88,7 +88,7 @@ onUnmounted(() => {
 <style scoped lang="scss">
 .slider-container {
     position: relative;
-    height: 400px;
+    max-height: 400px;
     width: 100%;
     overflow: hidden;
     .slider {

@@ -65,7 +65,7 @@ onMounted(() => {
             }
             .main-content {
                 flex: 1;
-                background-color: #f5f5f5;
+                background-color: #f0eded;
                 overflow: auto;
             }
         }
