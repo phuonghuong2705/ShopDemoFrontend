@@ -16,12 +16,19 @@
                     </a-row>
                 </a-col>
             </a-row>
-            <a-row>
-                <div style="color: black;">Sản phẩm bán chạy</div>
-            </a-row>
-            <a-row>
+        </div>
+        <FilterBox />
+        <div class="product-best-seller">
+            <div class="title">Sản phẩm bán chạy</div>
+            <div class="best-seller">
                 <ListProduct />
-            </a-row>
+            </div>
+        </div>
+        <div class="product-best-seller">
+            <div class="title">Bộ sưu tập</div>
+            <div class="best-seller">
+                <ListProduct />
+            </div>
         </div>
     </div>
 </template>
@@ -31,7 +38,8 @@ import { onMounted, ref } from 'vue';
 import Slider from './Slider.vue';
 import VideoBanner from './VideoBanner.vue';
 import HomeBanner from './HomeBanner.vue';
-import ListProduct from '@/pages/clients/ListProduct/LIstProductHome.vue'
+import ListProduct from '@/pages/clients/ListProduct/LIstProductHome.vue';
+import FilterBox from '@/components/common/FilterBox.vue';
 
 const width = ref();
 const height = ref();
@@ -55,11 +63,31 @@ onMounted(() => {
 
 <style scoped lang="scss">
     .content {
-        justify-content: center;
+        align-items: center;
         margin: 1em;
+        color: black;
+        display: flex;
+        flex-direction: column;
         .banner-home{
             max-width: 1100px;
             max-height: 400px;
+        }
+        .product-best-seller{
+            background-color: white;
+            margin-top: 25px;
+            border-radius: 8px;
+            .title{
+                display: flex;
+                justify-content: center;
+                font-size: 20px;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                margin-top: 25px;
+                margin-bottom: 5px;
+            }
+            .best-seller{
+                justify-content: center;
+                max-width: 1100px;
+            }
         }
     }
 </style>
