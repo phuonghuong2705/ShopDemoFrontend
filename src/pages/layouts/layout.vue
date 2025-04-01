@@ -20,16 +20,19 @@ import Sidebar from '../../components/common/Sidebar.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 // import { authStore } from '../store/authStore';
+import api from '../../api/auth';
 
 // const store = authStore();
 const route = useRoute();
 const router = useRouter();
 const listComponent = ref(['dashboard'])
+const user = ref();
 
 onMounted(() => {
     // if (listComponent.value.some(keyword => route.path.includes(keyword))) {
     //     getUser();
     // }
+    getUser();
 });
 
 // const getUser = () => {
@@ -40,12 +43,22 @@ onMounted(() => {
 //         redirectToLogin();
 //     })
 // };
+const getUser = async () => {
+    try {
+        const response = await api.getUser();
+        user.value = response.data;
 
-// const redirectToLogin = () => {
-//     router.push({
-//         name: 'Login',
-//     });
-// }
+    } catch (error) {
+        console.log(error);
+        redirectToLogin();
+    }
+};
+
+const redirectToLogin = () => {
+    router.push({
+        name: 'Login',
+    });
+}
 </script>
 
 <style scoped lang="scss">

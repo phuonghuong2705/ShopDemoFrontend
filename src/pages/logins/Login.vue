@@ -68,6 +68,7 @@ import { reactive, computed } from 'vue';
 import { UserOutlined, LockOutlined, GoogleOutlined, FacebookOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
 // import { authStore } from '../../store/authStore';
+import api from '../../api/auth';
 
 // const store = authStore();
 const route = useRoute();
@@ -75,8 +76,8 @@ const router = useRouter();
 
 
 const formData = reactive({
-    username: '',
-    password: '',
+    username: 'huonghp@example.com',
+    password: 'password123',
     remember: true,
 });
 
@@ -108,6 +109,19 @@ const redirectToRegister = () => {
 //         console.log(err);
 //     });
 // }
+const login = async () => {
+    let params = {
+        email: formData.username,
+        password: formData.password, 
+    }
+      try {
+        const response = await api.login(params);
+        console.log('Login successful', response.data);
+        redirectToDashboard();
+        } catch (error) {
+            console.log('Login failed', error);
+    }
+}
 
 const redirectToDashboard = () => {
     router.push({

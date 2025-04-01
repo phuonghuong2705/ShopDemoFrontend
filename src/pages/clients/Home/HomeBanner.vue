@@ -1,6 +1,6 @@
 <template>
     <div class="banner">
-        <img src="https://images4.alphacoders.com/115/thumb-1920-115716.jpg" />
+        <img src="https://cubanvr.com/wp-content/uploads/2023/07/ai-image-generators.webp" />
     </div>
 </template>
 
