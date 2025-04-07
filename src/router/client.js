@@ -30,12 +30,111 @@ const client = [
                 },
                 children: [
                     {
-                        title: 'ListProduct',
-                        path: '', 
-                        name: 'ListProduct',
+                        title: 'Novel',
+                        path: 'novel', 
+                        name: 'Novel',
                         component: ListProduct,
                         meta: {
-                            title: 'Trí tuệ nhân tạo - Tích hợp'
+                            title: 'Tiểu thuyết'
+                        }
+                    },
+                    {
+                        title: 'ShortStory',
+                        path: 'short-story', 
+                        name: 'ShortStory',
+                        component: ListProduct,
+                        meta: {
+                            title: 'Truyện ngắn'
+                        }
+                    },
+                    {
+                        title: 'Poetry',
+                        path: 'poetry', 
+                        name: 'Poetry',
+                        component: ListProduct,
+                        meta: {
+                            title: 'Thơ'
+                        }
+                    },
+                    {
+                        title: 'NaturalScience',
+                        path: 'natural-science', 
+                        name: 'NaturalScience',
+                        component: ListProduct,
+                        meta: {
+                            title: 'Khoa học tự nhiên'
+                        }
+                    },
+                    {
+                        title: 'SocialScience',
+                        path: 'social-science',
+                        name: 'SocialScience',
+                        component: ListProduct,
+                        meta: {
+                            title: 'Khoa học xã hội'
+                        }
+                    },
+                    {
+                        title: 'SchoolBook',
+                        path: 'school-book',
+                        name: 'SchoolBook',
+                        component: ListProduct,
+                        meta: {
+                            title: 'Sách giáo khoa'
+                        }
+                    },
+                    {
+                        title: 'Psychology',
+                        path: 'psychology',
+                        name: 'Psychology',
+                        component: ListProduct,
+                        meta: {
+                            title: 'Tâm lý học'
+                        }
+                    },
+                    {
+                        title: 'SeftHelp',
+                        path: 'seft-help',
+                        name: 'SeftHelp',
+                        component: ListProduct,
+                        meta: {
+                            title: 'Phát triển bản thân'
+                        }
+                    },
+                    {
+                        title: 'EconomicsAndFinance',
+                        path: 'economics-finance',
+                        name: 'EconomicsAndFinance',
+                        component: ListProduct,
+                        meta: {
+                            title: 'Kinh tế và Tài chính'
+                        }
+                    },
+                    {
+                        title: 'History',
+                        path: 'history',
+                        name: 'History',
+                        component: ListProduct,
+                        meta: {
+                            title: 'Lịch sử'
+                        }
+                    },
+                    {
+                        title: 'CookBook',
+                        path: 'cook-book',
+                        name: 'CookBook',
+                        component: ListProduct,
+                        meta: {
+                            title: 'Sách nấu ăn'
+                        }
+                    },
+                    {
+                        title: 'Comic',
+                        path: 'comic',
+                        name: 'Comic',
+                        component: ListProduct,
+                        meta: {
+                            title: 'Truyện tranh'
                         }
                     },
                     {
