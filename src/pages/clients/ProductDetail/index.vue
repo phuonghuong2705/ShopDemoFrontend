@@ -167,17 +167,11 @@ const para = ref(`<ul>
                 margin-right: 3px;
             }
         }
-        .image-detail:hover{
-            // box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-        }
         .product-info{
             gap: 10px;
             font-family: Arial, Helvetica, sans-serif;
             .product-name{
                 font-size: 20px;
-            }
-            .author{
-
             }
             .rating{
                 display: flex;

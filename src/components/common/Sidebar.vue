@@ -5,14 +5,15 @@
             v-model:selectedKeys="state.selectedKeys"
             mode="inline"
             @click="handleClick"
-            :style="{width: state.collapsed? '50px': '250px'}"
+            :style="{width: state.collapsed? '50px': '235px'}"
             :inline-collapsed="state.collapsed"
             :items="items"
+            style="height: 100%; overflow-y: auto; overflow-x: hidden;"
         ></a-menu>
         <div 
             class="toggle-side-menu-icon" 
             @click="toggleCollapsed"
-            :style="{left: state.collapsed? '50px': '250px'}"
+            :style="{left: state.collapsed? '50px': '235px'}"
         >
             <span v-if="!state.collapsed">
                 <svg width="14" height="66" viewBox="0 0 14 66" fill="#f0f2f5" xmlns="http://www.w3.org/2000/svg">
@@ -70,22 +71,76 @@ const items = reactive([
         title: 'Produce',
         children: [
             {
-                key: '1',
-                label: 'Sản phẩm 1',
-                title: 'Sản phẩm 1',
-                router: 'Produce1',
+                key: 'Novel',
+                label: 'Tiểu thuyết',
+                title: 'Novel',
+                router: 'Novel',
             },
             {
-                key: '2',
-                label: 'Sản phẩm 2',
-                title: 'Sản phẩm 2',
-                router: 'Produce2',
+                key: 'ShortStory',
+                label: 'Truyện ngắn',
+                title: 'ShortStory',
+                router: 'ShortStory',
             },
             {
-                key: '3',
-                label: 'Sản phẩm 3',
-                title: 'Sản phẩm 3',
-                router: 'Produce3',
+                key: 'Poetry',
+                label: 'Thơ',
+                title: 'Poetry',
+                router: 'Poetry',
+            },
+            {
+                key: 'NaturalScience',
+                label: 'Khoa học tự nhiên',
+                title: 'NaturalScience',
+                router: 'NaturalScience',
+            },
+            {
+                key: 'SocialScience',
+                label: 'Khoa học xã hội',
+                title: 'SocialScience',
+                router: 'SocialScience',
+            },
+            {
+                key: 'SchoolBook',
+                label: 'Sách giáo khoa',
+                title: 'SchoolBook',
+                router: 'SchoolBook',
+            },
+            {
+                key: 'Psychology',
+                label: 'Tâm lý học',
+                title: 'Psychology',
+                router: 'Psychology',
+            },
+            {
+                key: 'SeftHelp',
+                label: 'Phát triển bản thân',
+                title: 'SeftHelp',
+                router: 'SeftHelp',
+            },
+            {
+                key: 'EconomicsAndFinance',
+                label: 'Kinh tế và Tài chính',
+                title: 'EconomicsAndFinance',
+                router: 'EconomicsAndFinance',
+            },
+            {
+                key: 'History',
+                label: 'Lịch sử',
+                title: 'History',
+                router: 'History',
+            },
+            {
+                key: 'CookBook',
+                label: 'Sách nấu ăn',
+                title: 'CookBook',
+                router: 'CookBook',
+            },
+            {
+                key: 'Comic',
+                label: 'Truyện tranh',
+                title: 'Comic',
+                router: 'Comic',
             },
         ],
     },
@@ -242,6 +297,7 @@ const adminSidebar = reactive([
 ]);
 const Produce = ref(['Produce']);
 const Cart = ref(['Cart']);
+const Home = ref(['Home']);
 
 onBeforeMount(() => {
     getSelectedKey();
@@ -268,7 +324,7 @@ const getSelectedKey = () => {
     else if (Cart.value.includes(route.name)) {
         state.value.selectedKeys = ['Cart'];
     } 
-    else {
+    else if (Home.value.includes(route.name)) {
         state.value.selectedKeys = ['Home'];
     }
     // else if (MemberManager.value.includes(route.name)) {
@@ -289,9 +345,9 @@ const getSelectedKey = () => {
     // else if (PointTransactionManager.value.includes(route.name)) {
     //     selectedKeys.value = ['ListPointTransaction'];
     // }
-    // else {
-    //     selectedKeys.value = [route.name];
-    // }
+    else {
+        state.value.selectedKeys = [route.name];
+    }
 }
 
 const toggleCollapsed = () => {
