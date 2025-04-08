@@ -1,10 +1,7 @@
 <template>
     <div class="filter">
-        <div class="title">
-            Bộ lọc
-        </div>
         <a-flex class="filter-group" align="start" justify="space-evenly">
-            <a-select
+            <!-- <a-select
                 v-model:value="value"
                 show-search
                 placeholder="Nhà xuất bản"
@@ -14,7 +11,7 @@
                 @focus="handleFocus"
                 @blur="handleBlur"
                 @change="handleChange"
-            ></a-select>
+            ></a-select> -->
             <a-select
                 v-model:value="value"
                 show-search
@@ -42,20 +39,6 @@
                 show-search
                 placeholder="Sắp xếp"
                 class="filter-option"
-                :options="options"
-                :filter-option="filterOption"
-                @focus="handleFocus"
-                @blur="handleBlur"
-                @change="handleChange"
-            ></a-select>
-        </a-flex>
-        <a-flex class="filter-group" align="start" justify="space-between">
-            <a-select
-                v-model:value="value"
-                show-search
-                placeholder="Năm phát hành"
-                class="filter-option"
-                style="margin-top: 0px; margin-left: 36px;"
                 :options="options"
                 :filter-option="filterOption"
                 @focus="handleFocus"
@@ -105,7 +88,6 @@
                     đ
                 </div>
             </div>
-            <a-button class="reset-button">Đặt lại</a-button>
         </a-flex>
     </div>
 </template>
@@ -123,6 +105,7 @@
     border-radius: 8px;
     justify-content: center;
     align-items: flex-end;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     .title{
         width: 100%;
         margin-top: 20px;
@@ -131,51 +114,53 @@
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
     .filter-group{
+        padding-top: 10px;
         width: 100%;
         .filter-option{
             margin-top: 8px;
             margin-bottom: 15px;
-            width: 230px;
+            width: 210px;
             border-radius: 15px;
             :deep(.ant-select-selector){
                 border-radius: 15px;
             }
         }
-    }
-    .input-range {
-        width: 40%;
-        display: flex;
-        .range {
+        .input-range {
+            width: 35%;
+            margin-top: 8px;
             display: flex;
-            .input {
-                width: calc((100% - 60px) / 2);
+            .range {
+                display: flex;
+                .input {
+                    width: calc((100% - 60px) / 2);
+                }
+                background: #ffffff;
+                border: 1px solid #d9d9d9;
+                border-radius: 0 0 0 0;
+                flex: 1;
+                z-index: 2;
             }
-            background: #ffffff;
-            border: 1px solid #d9d9d9;
-            border-radius: 0 0 0 0;
-            flex: 1;
-            z-index: 2;
-        }
-        .unit {
-            line-height: 30px;
-            width: 32px;
-            border-radius: 0 15px 15px 0;
-            text-align: center;
-            background-color: rgba(0, 0, 0, 0.02);
-            border: 1px solid #d9d9d9;
-            margin-left: -1px;
-            z-index: 1;
-        }
-        .title-price {
-            line-height: 30px;
-            width: 100px;
-            border-radius: 15px 0 0 15px;
-            text-align: center;
-            background-color: rgba(0, 0, 0, 0.02);
-            border: 1px solid #d9d9d9;
-            margin-left: -1px;
-            border-right: 0px;
-            z-index: 1;
+            .unit {
+                line-height: 30px;
+                width: 32px;
+                border-radius: 0 15px 15px 0;
+                text-align: center;
+                background-color: rgba(0, 0, 0, 0.02);
+                border: 1px solid #d9d9d9;
+                margin-left: -1px;
+                z-index: 1;
+            }
+            .title-price {
+                line-height: 30px;
+                width: 100px;
+                border-radius: 15px 0 0 15px;
+                text-align: center;
+                background-color: rgba(0, 0, 0, 0.02);
+                border: 1px solid #d9d9d9;
+                margin-left: -1px;
+                border-right: 0px;
+                z-index: 1;
+            }
         }
     }
     .reset-button{

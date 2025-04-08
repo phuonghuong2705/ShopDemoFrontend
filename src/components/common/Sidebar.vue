@@ -46,6 +46,7 @@ import {
     SettingOutlined,
     ShoppingCartOutlined,
     ShopOutlined,
+    ShoppingOutlined,
 } from '@ant-design/icons-vue';
 
 const router = useRouter();
@@ -150,6 +151,13 @@ const items = reactive([
         label: 'Giỏ hàng',
         title: 'Cart',
         router: 'Cart'
+    },
+    {
+        key: 'Order',
+        icon: () => h(ShoppingOutlined),
+        label: 'Đơn hàng',
+        title: 'Order',
+        router: 'Order'
     },
     {
         key: 'sub1',
@@ -297,6 +305,7 @@ const adminSidebar = reactive([
 ]);
 const Produce = ref(['Produce']);
 const Cart = ref(['Cart']);
+const Order = ref(['Order']);
 const Home = ref(['Home']);
 
 onBeforeMount(() => {
@@ -323,6 +332,9 @@ const getSelectedKey = () => {
     }
     else if (Cart.value.includes(route.name)) {
         state.value.selectedKeys = ['Cart'];
+    } 
+    else if (Cart.value.includes(route.name)) {
+        state.value.selectedKeys = ['Order'];
     } 
     else if (Home.value.includes(route.name)) {
         state.value.selectedKeys = ['Home'];

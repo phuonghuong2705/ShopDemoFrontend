@@ -38,7 +38,7 @@ import { onMounted, ref } from 'vue';
 import Slider from './Slider.vue';
 import VideoBanner from './VideoBanner.vue';
 import HomeBanner from './HomeBanner.vue';
-import ListProduct from '@/pages/clients/ListProduct/LIstProductHome.vue';
+import ListProduct from '@/pages/clients/ListProduct/ListProductHome.vue';
 import FilterBox from '@/components/common/FilterBox.vue';
 
 const width = ref();
