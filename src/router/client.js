@@ -4,6 +4,7 @@ import ProductDetail from "../pages/clients/ProductDetail/index.vue";
 import RouterListProduct from "../pages/clients/ListProduct/index.vue";
 import ListProduct from "@/components/clients/ListProduct/ListProduct.vue";
 import Cart from "../pages/clients/Cart/index.vue";
+import Order from "../pages/clients/Order/index.vue";
 import Login from "../pages/logins/Login.vue";
 import Register from "../pages/logins/Register.vue";
 const client = [
@@ -146,24 +147,6 @@ const client = [
                             title: 'ProductDetail',
                         },
                     },
-                //     {
-                //         title: 'Produce2',
-                //         path: 'produce2',
-                //         name: 'Produce2',
-                //         component: Product,
-                //         meta: {
-                //             title: 'Produce2',
-                //         },
-                //     },
-                //     {
-                //         title: 'Produce3',
-                //         path: 'produce3',
-                //         name: 'Produce3',
-                //         component: Product,
-                //         meta: {
-                //             title: 'Produce3',
-                //         },
-                //     },
                 ]
             },
             {   
@@ -173,6 +156,15 @@ const client = [
                 name: 'Cart',
                 meta: {
                     title: 'Giỏ hàng',
+                },
+            },
+            {   
+                title: 'Order',
+                path: 'order',
+                component: Order,
+                name: 'Order',
+                meta: {
+                    title: 'Đơn hàng',
                 },
             },
         ]
