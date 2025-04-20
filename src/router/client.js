@@ -1,16 +1,19 @@
 import Layout from "../pages/layouts/layout.vue";
 import Home from "../pages/clients/Home/index.vue";
 import ProductDetail from "../pages/clients/ProductDetail/index.vue";
-import RouterListProduct from "../pages/clients/ListProduct/index.vue";
+import CategoryRouter from "../pages/clients/ListProduct/index.vue";
+import Category from "../pages/clients/Category/index.vue";
 import ListProduct from "@/components/clients/ListProduct/ListProduct.vue";
 import Cart from "../pages/clients/Cart/index.vue";
 import Order from "../pages/clients/Order/index.vue";
 import Login from "../pages/logins/Login.vue";
+import User from "../pages/clients/User/index.vue"
 import Register from "../pages/logins/Register.vue";
 const client = [
     {   
         path: '/',
         component: Layout,
+        meta: { layout: 'client' },
         children: [
             {
                 title: 'Home',
@@ -22,14 +25,23 @@ const client = [
                 },
             },
             {   
-                title: 'RouterListProduct',
-                path: 'product',
-                component: RouterListProduct,
-                name: 'RouterListProduct',
+                title: 'CategoryRouter',
+                path: 'category',
+                component: CategoryRouter,
+                name: 'CategoryRouter',
                 meta: {
-                    title: 'Sản phẩm',
+                    title: 'Mục lục',
                 },
                 children: [
+                    {
+                        title: 'Category',
+                        path: '', 
+                        name: 'Category',
+                        component: Category,
+                        meta: {
+                            title: 'Mục lục'
+                        }
+                    },
                     {
                         title: 'Novel',
                         path: 'novel', 
@@ -159,10 +171,19 @@ const client = [
                 },
             },
             {   
+                title: 'User',
+                path: 'user',
+                component: User,
+                name: 'User',
+                meta: {
+                    title: 'Người dùng',
+                },
+            },
+            {   
                 title: 'Order',
-                path: 'order',
+                path: 'order-history',
                 component: Order,
-                name: 'Order',
+                name: 'OrderHistory',
                 meta: {
                     title: 'Đơn hàng',
                 },

@@ -1,7 +1,7 @@
 <template>
     <div class="shopping-cart">
         <a-config-provider>
-            <a-table 
+            <a-table
                 :columns="columns" 
                 :data-source="listProduct" 
                 bordered
@@ -331,15 +331,21 @@ const handleCancelAddAddress = () => {
         align-items: start;
         gap: 20px;
         .cart{
+            padding: 10px;
+            border: 1px gainsboro solid;
             padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: white;
             border-radius: 8px;
+            width: 50%;
         }
         .shipping-infomation{
             background-color: white;
             padding: 20px;
             width: 400px;
             border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px gainsboro solid;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;

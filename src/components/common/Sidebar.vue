@@ -43,6 +43,7 @@ import { useRoute, useRouter } from 'vue-router';
 import {
     HomeOutlined,
     UserOutlined,
+    AuditOutlined,
     SettingOutlined,
     ShoppingCartOutlined,
     ShopOutlined,
@@ -59,254 +60,71 @@ const state = ref({
 });
 const items = reactive([
     {
-        key: 'Home',
+        key: 'Dashboard',
         icon: () => h(HomeOutlined),
         label: 'Trang chủ',
-        title: 'Home',
-        router: 'Home'
+        title: 'Trang chủ',
+        router: 'Dashboard'
     },
     {
-        key: 'Produce',
+        key: 'ListProduct',
         icon: () => h(ShopOutlined),
         label: 'Sản phẩm',
-        title: 'Produce',
-        children: [
-            {
-                key: 'Novel',
-                label: 'Tiểu thuyết',
-                title: 'Novel',
-                router: 'Novel',
-            },
-            {
-                key: 'ShortStory',
-                label: 'Truyện ngắn',
-                title: 'ShortStory',
-                router: 'ShortStory',
-            },
-            {
-                key: 'Poetry',
-                label: 'Thơ',
-                title: 'Poetry',
-                router: 'Poetry',
-            },
-            {
-                key: 'NaturalScience',
-                label: 'Khoa học tự nhiên',
-                title: 'NaturalScience',
-                router: 'NaturalScience',
-            },
-            {
-                key: 'SocialScience',
-                label: 'Khoa học xã hội',
-                title: 'SocialScience',
-                router: 'SocialScience',
-            },
-            {
-                key: 'SchoolBook',
-                label: 'Sách giáo khoa',
-                title: 'SchoolBook',
-                router: 'SchoolBook',
-            },
-            {
-                key: 'Psychology',
-                label: 'Tâm lý học',
-                title: 'Psychology',
-                router: 'Psychology',
-            },
-            {
-                key: 'SeftHelp',
-                label: 'Phát triển bản thân',
-                title: 'SeftHelp',
-                router: 'SeftHelp',
-            },
-            {
-                key: 'EconomicsAndFinance',
-                label: 'Kinh tế và Tài chính',
-                title: 'EconomicsAndFinance',
-                router: 'EconomicsAndFinance',
-            },
-            {
-                key: 'History',
-                label: 'Lịch sử',
-                title: 'History',
-                router: 'History',
-            },
-            {
-                key: 'CookBook',
-                label: 'Sách nấu ăn',
-                title: 'CookBook',
-                router: 'CookBook',
-            },
-            {
-                key: 'Comic',
-                label: 'Truyện tranh',
-                title: 'Comic',
-                router: 'Comic',
-            },
-        ],
+        title: 'Sản phẩm',
+        router: 'ListProduct'
     },
     {
-        key: 'Cart',
-        icon: () => h(ShoppingCartOutlined),
-        label: 'Giỏ hàng',
-        title: 'Cart',
-        router: 'Cart'
+        key: 'Employee',
+        icon: () => h(AuditOutlined),
+        label: 'Nhân viên',
+        title: 'Nhân viên',
+        router: 'Employee'
+    },
+    {
+        key: 'Customer',
+        icon: () => h(UserOutlined),
+        label: 'Khách hàng',
+        title: 'Khách hàng',
+        router: 'Customer'
     },
     {
         key: 'Order',
         icon: () => h(ShoppingOutlined),
         label: 'Đơn hàng',
-        title: 'Order',
+        title: 'Đơn hàng',
         router: 'Order'
     },
     {
-        key: 'sub1',
+        key: 'Setting',
         icon: () => h(SettingOutlined),
         label: 'Cài đặt',
         title: 'Cài đặt',
-        children: [
-            {
-                key: '5',
-                label: 'Thông tin chung',
-                title: 'Thông tin chung',
-            },
-            {
-                key: '6',
-                label: 'Cài đặt Người dùng',
-                title: 'Cài đặt Người dùng',
-            },
-            {
-                key: '7',
-                label: 'Đăng xuất',
-                title: 'Đăng xuất',
-            },
-        ],
+        router: 'Setting'
+        // children: [
+        //     {
+        //         key: '5',
+        //         label: 'Thông tin chung',
+        //         title: 'Thông tin chung',
+        //     },
+        //     {
+        //         key: '6',
+        //         label: 'Cài đặt Người dùng',
+        //         title: 'Cài đặt Người dùng',
+        //     },
+        //     {
+        //         key: '7',
+        //         label: 'Đăng xuất',
+        //         title: 'Đăng xuất',
+        //     },
+        // ],
     },
 ]);
 
-const clientSidebar = reactive([
-    {
-        key: 'Home',
-        icon: () => h(HomeOutlined),
-        label: 'Trang chủ',
-        title: 'Home',
-        router: 'Home'
-    },
-    {
-        key: 'Produce',
-        icon: () => h(ShopOutlined),
-        label: 'Sản phẩm',
-        title: 'Produce',
-        children: [
-            {
-                key: '1',
-                label: 'Sản phẩm 1',
-                title: 'Sản phẩm 1',
-                router: 'Produce1',
-            },
-            {
-                key: '2',
-                label: 'Sản phẩm 2',
-                title: 'Sản phẩm 2',
-                router: 'Produce2',
-            },
-            {
-                key: '3',
-                label: 'Sản phẩm 3',
-                title: 'Sản phẩm 3',
-                router: 'Produce3',
-            },
-        ],
-    },
-    {
-        key: 'Cart',
-        icon: () => h(ShoppingCartOutlined),
-        label: 'Giỏ hàng',
-        title: 'Cart',
-        router: 'Cart'
-    },
-    {
-        key: 'sub1',
-        icon: () => h(SettingOutlined),
-        label: 'Cài đặt',
-        title: 'Cài đặt',
-        children: [
-            {
-                key: '5',
-                label: 'Thông tin chung',
-                title: 'Thông tin chung',
-            },
-            {
-                key: '6',
-                label: 'Cài đặt Người dùng',
-                title: 'Cài đặt Người dùng',
-            },
-            {
-                key: '7',
-                label: 'Đăng xuất',
-                title: 'Đăng xuất',
-            },
-        ],
-    },
-]);
-
-
-const adminSidebar = reactive([
-    {
-        key: 'Home',
-        icon: () => h(HomeOutlined),
-        label: 'Trang chủ',
-        title: 'Home',
-        router: 'Home'
-    },
-    {
-        key: 'Produce',
-        icon: () => h(ShopOutlined),
-        label: 'Quản lý sản phẩm',
-        title: 'Produce',
-    },
-    {
-        key: 'Employee',
-        icon: () => h(ShoppingCartOutlined),
-        label: 'Nhân viên',
-        title: 'Employee',
-        router: 'Cart'
-    },
-    {
-        key: 'Bill',
-        icon: () => h(ShoppingCartOutlined),
-        label: 'Hóa đơn',
-        title: 'Bill',
-        router: 'Cart'
-    },
-    {
-        key: 'sub1',
-        icon: () => h(SettingOutlined),
-        label: 'Cài đặt',
-        title: 'Cài đặt',
-        children: [
-            {
-                key: '5',
-                label: 'Thông tin chung',
-                title: 'Thông tin chung',
-            },
-            {
-                key: '6',
-                label: 'Cài đặt Người dùng',
-                title: 'Cài đặt Người dùng',
-            },
-            {
-                key: '7',
-                label: 'Đăng xuất',
-                title: 'Đăng xuất',
-            },
-        ],
-    },
-]);
-const Produce = ref(['Produce']);
+const ListProduct = ref(['ListProduct', 'UpdateProduct', 'CreateProduct']);
 const Cart = ref(['Cart']);
-const Order = ref(['Order']);
-const Home = ref(['Home']);
+const Employee = ref(['Employee']);
+const Customer = ref(['Customer']);
+const Dashboard = ref(['Dashboard']);
 
 onBeforeMount(() => {
     getSelectedKey();
@@ -327,17 +145,20 @@ watch(() => route.name,
 );
 
 const getSelectedKey = () => {
-    if (Produce.value.includes(route.name)) {
-        state.value.selectedKeys = ['Produce'];
+    if (ListProduct.value.includes(route.name)) {
+        state.value.selectedKeys = ['ListProduct'];
     }
-    else if (Cart.value.includes(route.name)) {
-        state.value.selectedKeys = ['Cart'];
+    else if (Employee.value.includes(route.name)) {
+        state.value.selectedKeys = ['Employee'];
+    } 
+    else if (Customer.value.includes(route.name)) {
+        state.value.selectedKeys = ['Customer'];
     } 
     else if (Cart.value.includes(route.name)) {
         state.value.selectedKeys = ['Order'];
     } 
-    else if (Home.value.includes(route.name)) {
-        state.value.selectedKeys = ['Home'];
+    else if (Dashboard.value.includes(route.name)) {
+        state.value.selectedKeys = ['Dashboard'];
     }
     // else if (MemberManager.value.includes(route.name)) {
     //     selectedKeys.value = ['ManagerMember'];

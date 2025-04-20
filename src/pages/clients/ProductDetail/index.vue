@@ -1,7 +1,7 @@
 <template>
     <div class="content">
         <a-card class="product-detail" >
-            <template #title>Thông tin sản phẩm</template>
+            <template #title><span style="font-weight: 600; font-size: 25px;">Thông tin sản phẩm</span></template>
             <a-flex horizontal :gap="20">
                 <a-flex class="image-detail"  vertical>
                     <a-image
@@ -80,7 +80,7 @@
                             120.000<sup>đ</sup>
                         </div>
                     </div>
-                    <a-button class="add-to-cart" size="large">Thêm vào giỏ hàng</a-button>
+                    <a-button class="add-to-cart" type="primary" size="large">Thêm vào giỏ hàng</a-button>
                 </a-flex>
             </a-flex>
         </a-card>
@@ -152,7 +152,7 @@ const para = ref(`<ul>
         width: 900px;
         .image-detail{
             padding: 10px;
-            border: 1px solid rgb(219, 219, 219);
+            border: 1px solid gainsboro;
             border-radius: 8px;
             :deep(.ant-image){
                 .image-view{
