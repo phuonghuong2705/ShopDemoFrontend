@@ -1,28 +1,7 @@
 <template>
     <div class="filter">
         <a-flex class="filter-group" align="start" justify="space-evenly">
-            <!-- <a-select
-                v-model:value="value"
-                show-search
-                placeholder="Nhà xuất bản"
-                class="filter-option"
-                :options="options"
-                :filter-option="filterOption"
-                @focus="handleFocus"
-                @blur="handleBlur"
-                @change="handleChange"
-            ></a-select> -->
-            <a-select
-                v-model:value="value"
-                show-search
-                placeholder="Tác giả"
-                class="filter-option"
-                :options="options"
-                :filter-option="filterOption"
-                @focus="handleFocus"
-                @blur="handleBlur"
-                @change="handleChange"
-            ></a-select>
+            <a-input v-model="value" class="filter-option" placeholder="Nhập tên sách"></a-input>
             <a-select
                 v-model:value="value"
                 show-search
@@ -100,7 +79,6 @@
     display: flex;
     flex-direction: column;
     background-color: white;
-    width: 1100px;
     margin-top: 15px;
     border-radius: 8px;
     justify-content: center;
@@ -119,7 +97,7 @@
         .filter-option{
             margin-top: 8px;
             margin-bottom: 15px;
-            width: 210px;
+            width: 250px;
             border-radius: 15px;
             :deep(.ant-select-selector){
                 border-radius: 15px;

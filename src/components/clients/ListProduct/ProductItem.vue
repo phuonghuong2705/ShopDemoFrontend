@@ -1,15 +1,15 @@
 <template>
     <div class="product-item" @click="routeLinkToProductDetail()">
-        <a-card hoverable>
+        <a-card hoverable style="padding: 10px;border: 1px solid gainsboro;">
             <template #cover>
                 <img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
             </template>
-            Hoa phuowjng ddor
             <a-card-meta title="Europe Street beat">
                 <template #description>
+                    <div>Hoa phuowjng ddor</div>
                     <a-flex align="center" justify="space-between">
                         <a-rate style="font-size:10px" :value="2.5" allow-half disabled />
-                        Đã bán: 1000
+                        <div>Đã bán: 1000</div>
                     </a-flex>
                 </template>
             </a-card-meta>
@@ -31,7 +31,7 @@ const routeLinkToProductDetail = () => {
 </script>
 <style lang="scss" scoped>
 .product-item{
-    width: 215px;
+    width: 230px;
     padding: 10px 0 10px 20px;
 }
 :deep(.ant-rate-star:not(:last-child)){

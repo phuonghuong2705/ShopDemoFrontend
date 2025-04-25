@@ -1,25 +1,11 @@
 <template>
     <div class="slider-container">
-        <div class="slider">
-            <div
-                class="slides"
-                :style="{ transform: `translateX(-${currentIndex * 100}%)`, transition: smoothTransition }"
-                @transitionend="handleTransitionEnd"
-            >
-                <div v-for="(slide, index) in clonedSlides" :key="index" class="slide">
-                <img style="object-fit: cover;" :src="slide.image" :alt="'Slide ' + (index + 1)" />
-                </div>
-            </div>
-        </div>
-
-        <!-- Nút Previous -->
-        <div class="prev-theme">
-            <button class="prev-button" @click="prevSlide">❮</button>
-        </div>
-        <!-- <a-button class="prev-button" @click="prevSlide">❮</a-button> -->
-        <!-- Nút Next -->
-         <div class="next-theme">
-             <button class="next-button" @click="nextSlide">❯</button>
+         <div class="img-background">
+            <div class="overlay"></div>
+            <a-flex style="position: relative; z-index: 1; color: #FFFFFF; width: 80%; height: 60%; display: flex; align-items: flex-start;" vertical>
+                <div style="color: white; font-size: 64px; font-family: Arial, Helvetica, sans-serif; font-weight: 600; width: 70%;">Tìm ra cuốn sách tiếp theo khiến bạn say mê</div>
+                <div style="color: white; font-size: 24px; font-family: Arial, Helvetica, sans-serif;">Khám phá hàng triệu đầu sách từ các nhà bán lẻ độc lập trên toàn thế giới.</div>
+            </a-flex>
          </div>
     </div>
 </template>
@@ -87,10 +73,23 @@ onUnmounted(() => {
   
 <style scoped lang="scss">
 .slider-container {
-    position: relative;
-    max-height: 400px;
+    height: 600px;
     width: 100%;
-    overflow: hidden;
+    .img-background{
+        height: 600px;
+        position: relative;
+        width: 100%;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        background-image: url(/public/img/background_home.png);
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.2); /* Điều chỉnh độ tối ở đây */
+            z-index: 1;
+        }
+    }
     .slider {
         width: 100%;
         height: 100%;
@@ -102,7 +101,7 @@ onUnmounted(() => {
                 min-width: 100%;
                 img {
                     width: 100%;
-                    height: auto;
+                    height: 600px;
                 }
             }
         }

@@ -34,7 +34,7 @@ const listProduct = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
         // }
         .list-product{
             margin-top: 10px;
-            max-width: 1100px;
+            justify-content: center;
             display: flex;
             flex-wrap: wrap;
         }
