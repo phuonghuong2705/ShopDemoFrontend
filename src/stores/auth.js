@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import api from '@/api/fiber';
+import fiber from '@/api/fiber';
+import api from '@/api/auth';
 
 export const useAuthStore = defineStore('auth', () => {
     const uploadFile = async function  (data) {
@@ -15,7 +16,7 @@ export const useAuthStore = defineStore('auth', () => {
                 formData.append("prefix", '/chatbox-v2/');
                 formData.append("file", data.file);
 
-                let res = await api.uploadFile(formData);
+                let res = await fiber.uploadFile(formData);
 
                 resolve(res);
             } catch (e) {
@@ -23,6 +24,17 @@ export const useAuthStore = defineStore('auth', () => {
                 reject(e);
             }
         });
+    };
+    const register = async function  (data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let res = await api.register(data);
+                resolve(res);
+            } catch (e) {
+                console.log("err: ", e);
+                reject(e);
+            }
+        });
     }
-  return { uploadFile }
+  return { uploadFile, register }
 })
