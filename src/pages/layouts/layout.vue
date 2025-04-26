@@ -35,6 +35,10 @@ onMounted(() => {
     //     getUser();
     // }
     // getUser();
+    console.log(process.env.api);
+    console.log(process.env.fiberApi);
+    
+    
     console.log(route.meta.layout);
     
 });

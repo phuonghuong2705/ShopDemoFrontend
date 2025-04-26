@@ -2,7 +2,9 @@
     <div class="content">
         <div class="profile-header">
             <a-flex :gap="20">
-                <a-avatar :size="80" :src="user.avatar" />
+                <a-avatar :size="80" :src="user.avatar">
+                    <template #icon><UserOutlined /></template>
+                </a-avatar>
                 <div>
                     <div style="font-weight: 600;">{{ user.fullName }}</div>
                     <div class="text-gray-500 text-sm">{{ user.email }}</div>
@@ -61,6 +63,22 @@
         <a-modal v-model:open="modalChangeInfomationVisible" title="Cập nhật thông tin" @ok="handleOk">
             <a-flex :gap="10" vertical>
                 <a-flex justify="space-between" :gap="20">
+                    <div style="width: 100%; display: flex; align-items: center; justify-content: center;">
+                        <input type="file" :id="('Image')" style="display: none;" accept="image/*" @change="loadFile($event)">
+                        <a-tooltip placement="top">
+                            <template #title>
+                                <span>Vui lòng sử dụng file .gif, .png, .jpg, .jpeg và dung lượng dưới 10MB.</span>
+                            </template>
+                            <label :for="('Image')" style="position: relative; cursor: pointer;">
+                                <a-avatar :size="100" :id="('Image')" :src="user.avatar">
+                                    <template #icon><UserOutlined /></template>
+                                </a-avatar>
+                                <div class="add-img"><camera-outlined style="font-size: 25px;"/></div>
+                            </label>
+                        </a-tooltip>
+                    </div>
+                </a-flex>
+                <a-flex justify="space-between" :gap="20">
                     <a-flex vertical style="width: 50%;">
                         <span style="font-weight: 600;">Email</span>
                         <a-input v-model="user.email"></a-input>
@@ -86,15 +104,19 @@
 </template>
   
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive } from 'vue';
+import { CameraOutlined, UserOutlined } from '@ant-design/icons-vue';
+import { useAuthStore } from '@/stores/auth.js';
+import { message } from 'ant-design-vue';
 
+const authStore = useAuthStore();
 const modalChangePasswordVisible = ref(false);
 const modalChangeInfomationVisible = ref(false);
 
 const user = reactive({
     fullName: 'John Doe',
     email: 'john.doe@example.com',
-    avatar: 'https://via.placeholder.com/64',
+    avatar: null,
     phone: '+1 (555) 123-4567',
 })
 
@@ -105,6 +127,24 @@ const form = reactive({
     phone: '+1 (555) 123-4567',
     bio: 'Product Designer based in San Francisco, CA. Passionate about creating user-friendly interfaces.',
 })
+
+async function loadFile(event){
+    var ext = ref(event.target.files[0].name.substr(event.target.files[0].name.lastIndexOf('.') + 1).toLowerCase());
+    if(!['gif', 'png', 'jpg', 'jpeg'].includes(ext.value) || ((event.target.files[0].size / 1024) / 1024) > 10){
+        return message.error('Định dạng không hỗ trợ. Vui lòng sử dụng file .gif, .png, .jpg, .jpeg và dung lượng dưới 10MB.');
+    }
+    authStore.uploadFile({
+        type: 1,
+        file: event.target.files[0]
+    })
+    .then(res => {
+        console.log(res);
+        user.avatar = res.link;
+    })
+    .catch(() =>{
+        message.error('Tải file thất bại');
+    })
+}
 </script>
 
 <style scoped lang="scss">
@@ -128,5 +168,17 @@ const form = reactive({
             border: 1px gainsboro solid;
             min-width: 40vw;
         }
+    }
+    .add-img{
+        position: absolute;
+        top: 50%;
+        background-color: white;
+        opacity: 0.5;
+        width: 100%;
+        height: 50%;
+        border-radius: 0px 0px 100px 100px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
     }
 </style>

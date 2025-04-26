@@ -9,13 +9,13 @@
                 @finishFailed="onFinishFailed"
             >
                 <a-form-item>
-                    <a-typography-title class="login-form-title">
-                        Login
+                    <a-typography-title :level="2" class="login-form-title">
+                        Đăng nhập
                     </a-typography-title>
                 </a-form-item>
 
                 <a-form-item
-                    label="Username"
+                    label="Email"
                     name="username"
                     :rules="[{ required: true, message: 'Please input your username!' }]"
                 >
@@ -27,7 +27,7 @@
                 </a-form-item>
         
                 <a-form-item
-                    label="Password"
+                    label="Mật khẩu"
                     name="password"
                     :rules="[{ required: true, message: 'Please input your password!' }]"
                 >
@@ -49,11 +49,6 @@
                     <a-button :disabled="disabled" @click="login()" type="primary" html-type="submit" class="login-form-button">
                         Log in
                     </a-button>
-                    <div class="form-text">Or Sign Up With</div>
-                    <a-space align="center" style="width: 100%; gap: 10px; justify-content: center;">
-                        <a-avatar :size="30" src="/img/googleIcon.png"/>
-                        <a-avatar :size="30" src="/img/facebookIcon.png"/>
-                    </a-space>
                     <div class="form-text">
                         Or
                         <a-button type="link" @click="redirectToRegister()">register now!</a-button>
@@ -153,6 +148,7 @@ const redirectToDashboard = () => {
             .login-form {
                 max-width: 300px;
                 .login-form-title{
+                    margin-top: 20px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
