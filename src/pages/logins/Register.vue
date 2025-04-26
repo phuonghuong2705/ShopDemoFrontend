@@ -64,7 +64,7 @@
                     </a-input-password>
                 </a-form-item>
                 <a-form-item>
-                    <a-button :disabled="disabled" @click="login()" type="primary" html-type="submit" class="login-form-button">
+                    <a-button :disabled="disabled" @click="register()" type="primary" html-type="submit" class="login-form-button">
                         Đăng ký
                     </a-button>
                     <div class="form-text">
@@ -80,8 +80,9 @@
 import { reactive, ref, computed } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
-// import { authStore } from '../../store/authStore';
-import api from '../../api/auth';
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore();
 
 // const store = authStore();
 const route = useRoute();
@@ -134,19 +135,15 @@ const redirectToLogin = () => {
 //         console.log(err);
 //     });
 // }
-const login = async () => {
-    let params = {
-        email: formData.username,
-        password: formData.password, 
-    }
-      try {
-        const response = await api.login(params);
-        console.log('Login successful', response.data);
+const register = () => {
+    authStore.register(formData.value).then(res => {
+        console.log('Success', res);
         redirectToDashboard();
-        } catch (error) {
-            console.log('Login failed', error);
-    }
+    }).catch(err => {
+        console.log('Login failed', err);
+    })
 }
+
 
 const redirectToDashboard = () => {
     router.push({

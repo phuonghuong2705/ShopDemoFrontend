@@ -77,7 +77,7 @@
                                                 v-if="item.img?.length"
                                                 style="align-items: flex-end; width: 70%; height: 80px; overflow-y: auto; overflow-x: hidden; padding-left: 10px;"
                                             >
-                                                <template #renderItem="{ item, index }">
+                                                <template #renderItem="{ item, index: imgIndex }">
                                                     <a-flex 
                                                         vertical align="flex-start" 
                                                         justify="center"
@@ -85,7 +85,7 @@
                                                         
                                                     >
                                                         <a-button style="position: absolute; width: 70px; height: 70px; top: 0; opacity: 0; cursor: pointer;" @click="previewImage(item)"></a-button>
-                                                        <div class="chatbox-media-remove" @click="deleteImage(index)">
+                                                        <div class="chatbox-media-remove" @click="deleteImage(index, imgIndex)">
                                                             <span title="Xóa ảnh">
                                                                 <svg width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                     <path d="M2.77623 2.50001L4.9428 0.33343C5.01907 0.25715 5.01907 0.133479 4.9428 0.0572094C4.86652 -0.01906 4.74285 -0.0190698 4.66658 0.0572094L2.5 2.22379L0.33343 0.0572094C0.25715 -0.0190698 0.133479 -0.0190698 0.0572094 0.0572094C-0.01906 0.133489 -0.0190698 0.25716 0.0572094 0.33343L2.22378 2.5L0.0572094 4.66658C-0.0190698 4.74286 -0.0190698 4.86653 0.0572094 4.9428C0.0953441 4.98093 0.145334 4.99999 0.195324 4.99999C0.245314 4.99999 0.295295 4.98093 0.333439 4.9428L2.5 2.77623L4.66657 4.9428C4.7047 4.98093 4.75469 4.99999 4.80468 4.99999C4.85467 4.99999 4.90465 4.98093 4.9428 4.9428C5.01907 4.86652 5.01907 4.74285 4.9428 4.66658L2.77623 2.50001Z" fill="white"/>
@@ -237,8 +237,8 @@ const handleCancel = () => {
     visibleModalPreviewImage.value = false;
 }
 
-const deleteImage = (index) => {
-    console.log(index);
+const deleteImage = (index, imgIndex) => {
+    listEdition.value[index].img.splice(imgIndex, 1)
 }
 
 const RedirectToListProduct = () => {
