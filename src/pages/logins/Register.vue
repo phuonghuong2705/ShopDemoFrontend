@@ -5,8 +5,6 @@
                 :model="formData"
                 name="normal_login"
                 class="login-form"
-                @finish="onFinish"
-                @finishFailed="onFinishFailed"
                 layout="vertical"
             >
                 <a-form-item>
@@ -81,6 +79,7 @@ import { reactive, ref, computed } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { notification } from 'ant-design-vue';
 
 const authStore = useAuthStore();
 
@@ -97,24 +96,18 @@ const formData = ref({
 });
 
 //action
-const onFinish = values => {
-    console.log('Success:', values);
-};
-const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
-};
 const disabled = computed(() => {
-  const valuesFilled = Object.values(formData.value).every(val => val && val.trim() !== '');
-  const passwordMatch = formData.value.password === formData.value.password_confirmation;
+    const valuesFilled = Object.values(formData.value).every(val => val && val.trim() !== '');
+    const passwordMatch = formData.value.password === formData.value.password_confirmation;
 
-  return !valuesFilled || !passwordMatch;
+    return !valuesFilled || !passwordMatch;
 });
 
 const validateConfirmPassword = (rule, value) => {
-  if (value !== formData.value.password) {
-    return Promise.reject('Mật khẩu xác nhận không khớp!')
-  }
-  return Promise.resolve()
+    if (value !== formData.value.password) {
+        return Promise.reject('Mật khẩu xác nhận không khớp!')
+    }
+    return Promise.resolve()
 };
 
 const redirectToLogin = () => {
@@ -123,32 +116,27 @@ const redirectToLogin = () => {
     })
 }
 
-// const login = () => {
-//     let params = {
-//         email: formData.username,
-//         password: formData.password, 
-//     }
-//     store.login(params).then(res => {
-//         console.log(res);
-//         redirectToDashboard();
-//     }).catch(err => {
-//         console.log(err);
-//     });
-// }
+
+
+const openNotification = placement => {
+    notification['error']({
+        message: 'Email đã tồn tại',
+        description:
+        'Email đã được sử dung để đăng ký 1 tài khoản khác, vui lòng sử dụng email khác',
+        placement,
+    });
+};
+
+
 const register = () => {
     authStore.register(formData.value).then(res => {
         console.log('Success', res);
-        redirectToDashboard();
+        redirectToLogin();
     }).catch(err => {
-        console.log('Login failed', err);
+        notification.destroy();
+        openNotification('top');
+        console.log('Failed', err);
     })
-}
-
-
-const redirectToDashboard = () => {
-    router.push({
-        name: 'Dashboard',
-    });
 }
 
 </script>

@@ -9,11 +9,11 @@ export default {
                 withCredentials: true,
             })
                 .then((response) => {
-                    // if (response.data.status) {
-                    //     resolve(response.data.data);
-                    // } else {
-                    //     reject(response);
-                    // }
+                    if (response.data.status) {
+                        resolve(response.data.data);
+                    } else {
+                        reject(response);
+                    }
                     resolve(response);
                 }).catch((response) => {
                     reject(response);
