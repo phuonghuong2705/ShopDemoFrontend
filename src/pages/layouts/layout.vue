@@ -7,7 +7,9 @@
                     <Sidebar />
                 </div>
                 <div class="main-content" :style="{backgroundColor: route.meta.layout == 'admin' ? '#f0eded' : 'white'}">
-                    <router-view></router-view>
+                    <a-config-provider :locale="locale">
+                        <router-view />
+                    </a-config-provider>
                 </div> 
                 <!-- <Footer /> -->
             </div>
@@ -20,26 +22,22 @@ import Header from '../../components/common/Header.vue';
 import Footer from '@/components/common/Footer.vue';
 import Sidebar from '../../components/common/Sidebar.vue';
 import { useRoute, useRouter } from 'vue-router';
-import { onMounted, ref } from 'vue';
-// import { authStore } from '../store/authStore';
-import api from '../../api/auth';
+import { onBeforeMount, onMounted, ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import locale from 'ant-design-vue/es/locale/vi_VN';
 
 // const store = authStore();
 const route = useRoute();
 const router = useRouter();
-const listComponent = ref(['dashboard'])
+const listComponent = ref(['dashboard']);
+const authStore = useAuthStore();
 const user = ref();
 
+onBeforeMount(() => {
+    authStore.getUser();
+});
+
 onMounted(() => {
-    // if (listComponent.value.some(keyword => route.path.includes(keyword))) {
-    //     getUser();
-    // }
-    // getUser();
-    console.log(process.env.api);
-    console.log(process.env.fiberApi);
-    
-    
-    console.log(route.meta.layout);
     
 });
 

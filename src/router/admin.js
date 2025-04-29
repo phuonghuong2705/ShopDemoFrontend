@@ -6,11 +6,23 @@ import CreateUpdateProduct from "@/components/admins/Product/CreateUpdateProduct
 import Employee from "../pages/admins/Employee/index.vue";
 import Customer from "../pages/admins/Customer/index.vue";
 import Order from "../pages/admins/Customer/index.vue";
+import { useAuthStore } from '@/stores/auth';
 const admin = [
     {   
         path: '/',
         component: Layout,
         meta: { layout: 'admin' },
+        beforeEnter: (to, from, next) => {
+            const authStore = useAuthStore();
+            authStore.getUser().then(res => {
+                if (res?.type !== 'user') {
+                    // Không phải user thì chuyển hướng (ví dụ về trang chủ hoặc trang 403)
+                    next({ name: 'Home' }); // hoặc redirect về trang phù hợp
+                } else  {
+                    next();
+                }
+            })
+        },
         children: [
             {
                 path: 'dashboard',

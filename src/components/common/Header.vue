@@ -16,11 +16,16 @@
                     </template>
                 </a-input>
                 <ShoppingCartOutlined v-if="route.meta.layout == 'client'" class="icon-style" @click="redirectTo('Cart')"/>
-                <UserOutlined v-if="route.meta.layout == 'client'" class="icon-style" @click="redirectTo('Login')"/>
-                <a-dropdown trigger="['click']">
-                    <a-avatar size="23" class="icon-style">
-                        <template #icon><UserOutlined /></template>
-                    </a-avatar>
+                <UserOutlined v-if="route.meta.layout == 'client' && !userInformation" class="icon-style" @click="redirectTo('Login')"/>
+                <a-dropdown v-if="userInformation" trigger="['click']">
+                    <template #default>
+                        <div style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <a-avatar size="23" :src="userInformation.avatar">
+                            <template #icon><UserOutlined /></template>
+                        </a-avatar>
+                        <span style="color: black;">{{ userInformation?.name }}</span>
+                        </div>
+                    </template>
                     <template #overlay>
                     <a-menu>
                         <a-menu-item @click="redirectTo('User')">
@@ -29,7 +34,7 @@
                         <a-menu-item v-if="route.meta.layout == 'client'" @click="redirectTo('OrderHistory')">
                             Lịch sử mua hàng
                         </a-menu-item>
-                        <a-menu-item>
+                        <a-menu-item @click="logout">
                             Đăng xuất
                         </a-menu-item>
                     </a-menu>
@@ -46,15 +51,18 @@
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
-import { h, ref, onBeforeMount, watch } from 'vue';
+import { h, ref, onBeforeMount, watch, computed } from 'vue';
 import { HomeOutlined, UnorderedListOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons-vue';
-// import { authStore } from '../store/authStore';
+import { useAuthStore } from '@/stores/auth';
 
-// const store = authStore();
 onBeforeMount(() => {
     getSelectedKey();
 });
 
+const authStore = useAuthStore();
+const userInformation = computed(() => {
+    return authStore.userInfo;
+})
 const current = ref(['Home']);
 const items = ref([
     {
@@ -116,10 +124,15 @@ const handleClick = menuInfo => {
 }
 
 const redirectToRouter = (name = '') => {
-    console.log(123);
-    
     router.push({
         name: name
+    })
+}
+
+const logout = () => {
+    authStore.logout().then(res => {
+    }).catch(err => {
+        console.log(res);
     })
 }
 </script>

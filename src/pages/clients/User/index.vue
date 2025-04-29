@@ -2,37 +2,37 @@
     <div class="content">
         <div class="profile-header">
             <a-flex :gap="20">
-                <a-avatar :size="80" :src="user.avatar">
+                <a-avatar :size="80" :src="userInformation?.avatar">
                     <template #icon><UserOutlined /></template>
                 </a-avatar>
                 <div>
-                    <div style="font-weight: 600;">{{ user.fullName }}</div>
-                    <div class="text-gray-500 text-sm">{{ user.email }}</div>
+                    <div style="font-weight: 600;">{{ userInformation?.name }}</div>
+                    <div class="text-gray-500 text-sm">{{ userInformation?.email }}</div>
                 </div>
             </a-flex>
         </div>
         <a-card class="user-infomation">
             <template #title>Thông tin người dùng</template>
-            <template #extra><a-button type="primary" @click="modalChangeInfomationVisible = true">Cập nhật</a-button></template>
+            <template #extra><a-button type="primary" @click="updatedInformation()">Cập nhật</a-button></template>
             <a-flex :gap="10" vertical>
                 <a-flex justify="space-between">
                     <a-flex vertical style="width: 50%;">
                         <span style="font-weight: 600;">Email</span>
-                        {{ user.email }}
+                        {{ userInformation?.email }}
                     </a-flex>
                     <a-flex vertical style="width: 50%;">
                         <span style="font-weight: 600;">Số điện thoại</span>
-                        {{ user.phone }}
+                        {{ userInformation?.phone? userInformation?.phone : 'Chưa có' }}
                     </a-flex>
                 </a-flex>
                 <a-flex justify="space-between">
                     <a-flex vertical style="width: 50%;">
                         <span style="font-weight: 600;">Ngày sinh</span>
-                        {{ user.email }}
+                        {{  userInformation?.birthday? userInformation?.birthday : 'Chưa rõ' }}
                     </a-flex>
                     <a-flex vertical style="width: 50%;">
                         <span style="font-weight: 600;">Giới tính</span>
-                        {{ user.phone }}
+                        {{ userInformation?.gender === 0 ? 'Nam' : userInformation?.gender === 1 ? 'Nữ' : 'Chưa rõ' }}
                     </a-flex>
                 </a-flex>
             </a-flex>
@@ -40,27 +40,40 @@
         <a-flex style="min-width: 40vw;" justify="flex-end">
             <a-button type="primary" @click="modalChangePasswordVisible = true">Đổi mật khẩu</a-button>
         </a-flex>
-        <a-modal v-model:open="modalChangePasswordVisible" title="Đổi mật khẩu" @ok="handleOk">
+        <a-modal 
+            v-model:open="modalChangePasswordVisible"
+            title="Đổi mật khẩu"
+            @ok="handleChangePassword"
+            okText="Xác nhận"
+            :confirmLoading="loading"
+        >
             <a-flex vertical :gap="10">
                 <span style="font-weight: 600;">Mật khẩu hiện tại</span>
                 <a-form-item>
-                    <a-input v-model:value="form.firstName" />
+                    <a-input v-model:value="updatePasswordForm.old_password" />
                 </a-form-item>
             </a-flex>
             <a-flex vertical :gap="10">
                 <span style="font-weight: 600;">Mật khẩu mới</span>
                 <a-form-item>
-                    <a-input v-model:value="form.firstName" />
+                    <a-input v-model:value="updatePasswordForm.new_password" />
                 </a-form-item>
             </a-flex>
             <a-flex vertical :gap="10">
                 <span style="font-weight: 600;">Xác nhận mật khẩu mới</span>
                 <a-form-item>
-                    <a-input v-model:value="form.firstName" />
+                    <a-input v-model:value="updatePasswordForm.new_password_confirmation" />
                 </a-form-item>
             </a-flex>
         </a-modal>
-        <a-modal v-model:open="modalChangeInfomationVisible" title="Cập nhật thông tin" @ok="handleOk">
+        <a-modal
+            v-model:open="modalChangeInfomationVisible"
+            title="Cập nhật thông tin"
+            @ok="handleUpdateInformation"
+            okText="Cập nhật",
+            cancelText="Hủy"
+            :confirmLoading="loading"
+        >
             <a-flex :gap="10" vertical>
                 <a-flex justify="space-between" :gap="20">
                     <div style="width: 100%; display: flex; align-items: center; justify-content: center;">
@@ -70,7 +83,7 @@
                                 <span>Vui lòng sử dụng file .gif, .png, .jpg, .jpeg và dung lượng dưới 10MB.</span>
                             </template>
                             <label :for="('Image')" style="position: relative; cursor: pointer;">
-                                <a-avatar :size="100" :id="('Image')" :src="user.avatar">
+                                <a-avatar :size="100" :id="('Image')" :src="updateInformationForm.avatar">
                                     <template #icon><UserOutlined /></template>
                                 </a-avatar>
                                 <div class="add-img"><camera-outlined style="font-size: 25px;"/></div>
@@ -81,21 +94,26 @@
                 <a-flex justify="space-between" :gap="20">
                     <a-flex vertical style="width: 50%;">
                         <span style="font-weight: 600;">Email</span>
-                        <a-input v-model="user.email"></a-input>
+                        <a-input v-model:value="updateInformationForm.email"></a-input>
                     </a-flex>
                     <a-flex vertical style="width: 50%;">
                         <span style="font-weight: 600;">Số điện thoại</span>
-                        <a-input v-model="user.email"></a-input>
+                        <a-input v-model:value="updateInformationForm.phone"></a-input>
                     </a-flex>
                 </a-flex>
                 <a-flex justify="space-between" :gap="20">
                     <a-flex vertical style="width: 50%;">
                         <span style="font-weight: 600;">Ngày sinh</span>
-                        <a-input v-model="user.email"></a-input>
+                        <a-date-picker 
+                            v-model:value="updateInformationForm.birthday" 
+                            placeholder="Chọn ngày"
+                            format="DD-MM-YYYY"
+                            :allowClear="false"
+                        />
                     </a-flex>
                     <a-flex vertical style="width: 50%;">
                         <span style="font-weight: 600;">Giới tính</span>
-                        <a-input v-model="user.email"></a-input>
+                        <a-select v-model:value="updateInformationForm.gender" :options="listGender" placeholder="Chọn một giới tính"></a-select>
                     </a-flex>
                 </a-flex>
             </a-flex>
@@ -104,29 +122,41 @@
 </template>
   
 <script setup>
-import { ref, reactive } from 'vue';
-import { CameraOutlined, UserOutlined } from '@ant-design/icons-vue';
+import { ref, reactive, computed, createVNode } from 'vue';
+import { CameraOutlined, UserOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { useAuthStore } from '@/stores/auth.js';
 import { message } from 'ant-design-vue';
+import { useCustomerStore } from '@/stores/customer';
+import dayjs from 'dayjs';
+import { Modal } from 'ant-design-vue';
 
 const authStore = useAuthStore();
+const customerStore = useCustomerStore();
+const loading = ref(false);
+
+const userInformation = computed(() => {
+    return authStore.userInfo;
+})
 const modalChangePasswordVisible = ref(false);
 const modalChangeInfomationVisible = ref(false);
+const listGender = ref([
+    {
+        label: 'Nam',
+        value: 0
+    },
+    {
+        label: 'Nữ',
+        value: 1
+    }
+])
 
-const user = reactive({
-    fullName: 'John Doe',
-    email: 'john.doe@example.com',
-    avatar: null,
-    phone: '+1 (555) 123-4567',
+const updatePasswordForm = ref({
+    old_password: null,
+    new_password: null,
+    new_password_confirmation: null,
 })
 
-const form = reactive({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    phone: '+1 (555) 123-4567',
-    bio: 'Product Designer based in San Francisco, CA. Passionate about creating user-friendly interfaces.',
-})
+const updateInformationForm = ref(null);
 
 async function loadFile(event){
     var ext = ref(event.target.files[0].name.substr(event.target.files[0].name.lastIndexOf('.') + 1).toLowerCase());
@@ -139,12 +169,71 @@ async function loadFile(event){
     })
     .then(res => {
         console.log(res);
-        user.avatar = res.link;
+        updateInformationForm.value.avatar = res.link;
     })
     .catch(() =>{
         message.error('Tải file thất bại');
     })
 }
+
+const updatedInformation = () => {
+    updateInformationForm.value = {...userInformation.value};
+    if(updateInformationForm.value.birthday){
+        updateInformationForm.value.birthday = dayjs(userInformation.value.birthday, 'DD-MM-YYYY');
+        console.log(updateInformationForm.value.birthday);
+    }
+    modalChangeInfomationVisible.value = true;
+}
+
+const handleUpdateInformation = async () => {
+    loading.value = true;
+    let params = {...updateInformationForm.value}
+    if(updateInformationForm.value.birthday){
+        params.birthday = dayjs(updateInformationForm.value.birthday).format('YYYY-MM-DD');
+    }
+    await customerStore.updateInformation(params).then(res => {
+        authStore.getUser().then(res => {
+        }).catch(err => {
+            console.log(err);
+        });
+        message.destroy();
+        message.success('Cập nhật thông tin thành công!');
+    }).catch (err => {
+        message.destroy();
+        message.error('Cập nhật thông tin thất bại!');
+        console.log(err);
+    })
+    loading.value = false;
+    modalChangeInfomationVisible.value = false;
+}
+
+const handleChangePassword = async () => {
+    Modal.confirm({
+        title: 'Bạn có chắc chắn muốn đổi mật khẩu?',
+        icon: createVNode(ExclamationCircleOutlined),
+        content: 'Sau khi đổi mật khẩu bạn cần đăng nhập lại để tiếp tục phiên làm việc.',
+        okText: 'Xác nhận',
+        cancelText: 'Hủy',
+        onCancel() {
+          Modal.destroyAll();
+        },
+        onOk() {
+            loading.value = true;
+            authStore.changePassword(updatePasswordForm.value).then(res => {
+                message.destroy();
+                message.success('Đổi mật khẩu thành công!');
+                loading.value = false;
+            }).catch (err => {
+                message.destroy();
+                message.error('Đổi mật khẩu thất bại!');
+                console.log(err);
+                loading.value = false;
+            })
+            modalChangeInfomationVisible.value = false;
+        },
+    });
+}
+
 </script>
 
 <style scoped lang="scss">
