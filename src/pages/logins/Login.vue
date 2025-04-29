@@ -5,8 +5,6 @@
                 :model="formData"
                 name="normal_login"
                 class="login-form"
-                @finish="onFinish"
-                @finishFailed="onFinishFailed"
             >
                 <a-form-item>
                     <a-typography-title :level="2" class="login-form-title">
@@ -62,10 +60,10 @@
 import { reactive, computed } from 'vue';
 import { UserOutlined, LockOutlined, GoogleOutlined, FacebookOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
-// import { authStore } from '../../store/authStore';
-import api from '../../api/auth';
+import { useAuthStore } from '@/stores/auth';
+import { message } from 'ant-design-vue';
 
-// const store = authStore();
+const authStore = useAuthStore();
 const route = useRoute();
 const router = useRouter();
 
@@ -77,12 +75,6 @@ const formData = reactive({
 });
 
 //action
-const onFinish = values => {
-    console.log('Success:', values);
-};
-const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
-};
 const disabled = computed(() => {
     return !(formData.username && formData.password);
 });
@@ -110,10 +102,16 @@ const login = async () => {
         password: formData.password, 
     }
       try {
-        const response = await api.login(params);
-        console.log('Login successful', response.data);
-        redirectToDashboard();
+        const response = await authStore.login(params);
+        console.log('Login successful');
         } catch (error) {
+            if(error?.data?.message == "Unauthorized.") {
+                message.destroy();
+                message.error("Email hoặc mật khẩu không chính xác, vui lòng kiểm tra lại!");
+            } else{
+                message.destroy();
+                message.error("Đã có lỗi xảy ra, vui lòng thử lại sau!");
+            }
             console.log('Login failed', error);
     }
 }

@@ -21,31 +21,70 @@ export default {
         });
     },
     login: (data) => {
-        const url = `http://localhost:8000/api/auth/login`;
+        const url = `${process.env.api}/login`;
         return new Promise((resolve, reject) => {
             axios.post(url, data, {
                 withCredentials: true,
             })
                 .then((response) => {
-                    // if (response.data.status) {
-                    //     resolve(response.data.data);
-                    // } else {
-                    //     reject(response);
-                    // }
+                    if (response.data.status) {
+                        resolve(response.data.data);
+                    } else {
+                        reject(response);
+                    }
                     resolve(response);
                 }).catch((response) => {
                     reject(response);
                 })
         });
     },
-    getUser: (data) => {
-        const url = `http://localhost:8000/api/me`;
+    getUser: () => {
+        const url = `${process.env.api}/me`;
         return new Promise((resolve, reject) => {
             axios.get(url, {
                 withCredentials: true,
             })
                 .then((response) => {
-
+                    if (response.data.status) {
+                        resolve(response.data);
+                    } else {
+                        reject(response);
+                    }
+                }).catch((response) => {
+                    reject(response);
+                })
+        });
+    },
+    logout: (data) => {
+        const url = `${process.env.api}/logout`;
+        return new Promise((resolve, reject) => {
+            axios.post(url, data, {
+                withCredentials: true,
+            })
+                .then((response) => {
+                    if (response.data.status) {
+                        resolve(response.data.data);
+                    } else {
+                        reject(response);
+                    }
+                    resolve(response);
+                }).catch((response) => {
+                    reject(response);
+                })
+        });
+    },
+    changePassword: (data) => {
+        const url = `${process.env.api}/change-password`;
+        return new Promise((resolve, reject) => {
+            axios.post(url, data, {
+                withCredentials: true,
+            })
+                .then((response) => {
+                    if (response.data.status) {
+                        resolve(response.data);
+                    } else {
+                        reject(response);
+                    }
                     resolve(response);
                 }).catch((response) => {
                     reject(response);

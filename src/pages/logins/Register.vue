@@ -116,8 +116,6 @@ const redirectToLogin = () => {
     })
 }
 
-
-
 const openNotification = placement => {
     notification['error']({
         message: 'Email đã tồn tại',
@@ -126,7 +124,6 @@ const openNotification = placement => {
         placement,
     });
 };
-
 
 const register = () => {
     authStore.register(formData.value).then(res => {

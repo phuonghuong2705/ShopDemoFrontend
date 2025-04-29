@@ -1,9 +1,22 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { useRoute, useRouter } from 'vue-router';
 import fiber from '@/api/fiber';
 import api from '@/api/auth';
+import dayjs from 'dayjs';
 
 export const useAuthStore = defineStore('auth', () => {
+    const router = useRouter();
+    const route = useRoute();
+    const userInfo = ref(null);
+    const type = ref(null);
+    //action
+    const redirectToRouter = (name = '') => {
+        router.push({
+            name: name
+        })
+    }
+
     const uploadFile = async function  (data) {
         return new Promise(async (resolve, reject) => {
             if (!data.file) {
@@ -36,5 +49,66 @@ export const useAuthStore = defineStore('auth', () => {
             }
         });
     }
-  return { uploadFile, register }
+    const login = async function  (data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let res = await api.login(data);
+                getUser().then(res => {
+                    if(res.type == 'customer'){
+                        router.push({
+                            name: 'Home',
+                        });
+                    }else if(res.type == 'user'){
+                        router.push({
+                            name: 'Dashboard',
+                        });
+                    }
+                });
+                resolve(res);
+            } catch (e) {
+                console.log("err: ", e);
+                reject(e);
+            }
+        });
+    }
+    const logout = async function  (data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let res = await api.logout(data).then(res => {
+                    redirectToRouter('Login');
+                });
+                resolve(res);
+            } catch (e) {
+                console.log("err: ", e);
+                reject(e);
+            }
+        });
+    }
+    const changePassword = async function  (data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let res = await api.changePassword(data);
+                logout();
+                resolve(res);
+            } catch (e) {
+                console.log("err: ", e);
+                reject(e);
+            }
+        });
+    }
+    const getUser = async function  () {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let res = await api.getUser();
+                userInfo.value = res.data;
+                type.value = res.type;
+                userInfo.value.birthday = dayjs(res.data.birthday).format('DD-MM-YYYY');
+                resolve(res);
+            } catch (e) {
+                console.log("err: ", e);
+                reject(e);
+            }
+        });
+    }
+  return { uploadFile, register, login, getUser, logout, changePassword, userInfo, type }
 })
