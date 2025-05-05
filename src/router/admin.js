@@ -21,7 +21,11 @@ const admin = [
                 } else  {
                     next();
                 }
-            })
+            }).catch(err => {
+                // Nếu không lấy được thông tin người dùng, có thể là chưa đăng nhập
+                // Chuyển hướng về trang đăng nhập hoặc trang 403
+                next({ name: 'Login' }); // hoặc redirect về trang phù hợp
+            });
         },
         children: [
             {
@@ -56,13 +60,20 @@ const admin = [
                         },
                     },
                     {
-                        path: 'update',
+                        path: 'update/:id',
                         title: 'UpdateProduct',
                         name: 'UpdateProduct',
                         component: CreateUpdateProduct,
                         meta: {
                             title: 'Cập nhật sản phẩm',
                         },
+                        beforeEnter: (to, from, next) => {
+                            if (to.params.id) {
+                                next();
+                            } else {
+                                next({name: 'ListProduct'});
+                            }
+                        }
                     }
                 ],
             },

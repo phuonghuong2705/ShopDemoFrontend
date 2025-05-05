@@ -55,10 +55,14 @@ export const useAuthStore = defineStore('auth', () => {
                 let res = await api.login(data);
                 getUser().then(res => {
                     if(res.type == 'customer'){
+                        console.log(123);
+                        
                         router.push({
                             name: 'Home',
                         });
                     }else if(res.type == 'user'){
+                        console.log(456);
+                        
                         router.push({
                             name: 'Dashboard',
                         });

@@ -7,6 +7,7 @@
             <div class="list-product">
                 <ProductItem
                     v-for="prod in listProduct"
+                    :product="prod"
                 />
             </div>
         </a-spin>
@@ -15,10 +16,55 @@
 <script setup>
 import FilterBox from '@/components/common/FilterBox.vue';
 import ProductItem from '@/components/clients/ListProduct/ProductItem.vue';
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useProductStore } from '@/stores/product';
+
+const route = useRoute();
+const router = useRouter();
+const productStore = useProductStore();
+
+onMounted(() => {
+    getListBookByCategory();
+});
 
 const loading = ref(false);
-const listProduct = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+const listProduct = ref([]);
+
+const getListBookByCategory = async () => {
+    if (router.currentRoute.value.name == 'Education') {
+        getListProduct(1);
+    } else if (router.currentRoute.value.name == 'LifeSkills') {
+        getListProduct(2);
+    } else if (router.currentRoute.value.name == 'Business') {
+        getListProduct(3);
+    } else if (router.currentRoute.value.name == 'Entertainment') {
+        getListProduct(4);
+    } else if (router.currentRoute.value.name == 'Academic') {
+        getListProduct(5);
+    } else if (router.currentRoute.value.name == 'Lifestyle') {
+        getListProduct(6);
+    } else {
+        getListProduct();
+    }
+    console.log(router.currentRoute.value.name);
+};
+    
+const getListProduct = async (categoryId) => {
+    loading.value = true;
+    let params = {
+        category_id: categoryId,
+    };
+    try {
+        const res = await productStore.getListBook(params);
+        listProduct.value = res;
+    } catch (error) {
+        console.log(error);
+    } finally {
+        loading.value = false;
+    }
+};
+
 </script>
 <style lang="scss" scoped>
     .content{
