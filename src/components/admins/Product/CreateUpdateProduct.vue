@@ -11,8 +11,7 @@
                                     <span>Vui lòng sử dụng file .gif, .png, .jpg, .jpeg và dung lượng dưới 10MB.</span>
                                 </template>
                                 <label :for="('Image')" style="cursor: pointer;" >
-                                    <img style="width: 200px; height: 250px; object-fit: contain;" :id="('Image')" :src="coverUrl == '' ? '/public/img/book_cover.png' : coverUrl">
-                                    </img>
+                                    <img style="width: 200px; height: 250px; object-fit: contain;" :id="('Image')" :src="coverUrl == '' ? '/public/img/book_cover.png' : coverUrl" />
                                     <div v-if="coverUrl === ''" class="add-img"><FileImageOutlined style="font-size: 30px; color: black;"/></div>
                                 </label>
                             </a-tooltip>
