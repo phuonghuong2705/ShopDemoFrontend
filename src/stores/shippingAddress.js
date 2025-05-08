@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import api from '@/api/order';
+import api from '@/api/shippingAddress';
 
-export const useOrderStore = defineStore('order', () => {
-    const getListOrder = async function  (data) {
+export const useShippingAddressStore = defineStore('shippingAddress', () => {
+    const getListAddress = async function  (data) {
         return new Promise(async (resolve, reject) => {
             try {
-                let res = await api.getListOrder(data);
+                let res = await api.getListAddress(data);
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
@@ -14,10 +14,10 @@ export const useOrderStore = defineStore('order', () => {
         });
     }
 
-    const createOrder = async function  (data) {
+    const updateAddress = async function  (data, id) {
         return new Promise(async (resolve, reject) => {
             try {
-                let res = await api.createOrder(data);
+                let res = await api.updateAddress(data, id);
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
@@ -26,10 +26,10 @@ export const useOrderStore = defineStore('order', () => {
         });
     }
 
-    const updateOrder = async function  (data) {
+    const createAddress = async function  (data) {
         return new Promise(async (resolve, reject) => {
             try {
-                let res = await api.updateOrder(data);
+                let res = await api.createAddress(data);
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
@@ -37,10 +37,10 @@ export const useOrderStore = defineStore('order', () => {
             }
         });
     }
-    const getDetailOrder = async function  (data) {
+    const deleteAddress = async function  (data) {
         return new Promise(async (resolve, reject) => {
             try {
-                let res = await api.getDetailOrder(data);
+                let res = await api.deleteAddress(data);
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
@@ -49,5 +49,5 @@ export const useOrderStore = defineStore('order', () => {
         });
     }
     
-  return { getListOrder , getDetailOrder, createOrder, updateOrder }
+  return { getListAddress , updateAddress, createAddress, deleteAddress }
 })

@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import api from '@/api/order';
+import api from '@/api/cart';
 
-export const useOrderStore = defineStore('order', () => {
-    const getListOrder = async function  (data) {
+export const useCartStore = defineStore('cart', () => {
+    const getListItem = async function  (data) {
         return new Promise(async (resolve, reject) => {
             try {
-                let res = await api.getListOrder(data);
+                let res = await api.getListItem(data);
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
@@ -14,10 +14,10 @@ export const useOrderStore = defineStore('order', () => {
         });
     }
 
-    const createOrder = async function  (data) {
+    const addItemToCart = async function  (data) {
         return new Promise(async (resolve, reject) => {
             try {
-                let res = await api.createOrder(data);
+                let res = await api.addItemToCart(data);
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
@@ -26,10 +26,10 @@ export const useOrderStore = defineStore('order', () => {
         });
     }
 
-    const updateOrder = async function  (data) {
+    const createAddress = async function  (data) {
         return new Promise(async (resolve, reject) => {
             try {
-                let res = await api.updateOrder(data);
+                let res = await api.createAddress(data);
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
@@ -37,10 +37,22 @@ export const useOrderStore = defineStore('order', () => {
             }
         });
     }
-    const getDetailOrder = async function  (data) {
+    const deleteAddress = async function  (data) {
         return new Promise(async (resolve, reject) => {
             try {
-                let res = await api.getDetailOrder(data);
+                let res = await api.deleteAddress(data);
+                resolve(res);
+            } catch (e) {
+                console.log("err: ", e);
+                reject(e);
+            }
+        });
+    }
+
+    const calculateTotal = async function  (data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let res = await api.calculateTotal(data);
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
@@ -49,5 +61,5 @@ export const useOrderStore = defineStore('order', () => {
         });
     }
     
-  return { getListOrder , getDetailOrder, createOrder, updateOrder }
+  return { getListItem , addItemToCart, createAddress, deleteAddress, calculateTotal }
 })

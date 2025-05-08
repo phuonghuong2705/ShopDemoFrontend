@@ -2,6 +2,7 @@
     <div class="shopping-cart">
         <a-config-provider>
             <a-table
+                :loading="loadingTable"
                 :columns="columns" 
                 :data-source="listProduct" 
                 bordered
@@ -16,8 +17,11 @@
                     <template v-if="column.dataIndex === 'product'">
                         <a>{{ text }}</a>
                     </template>
+                    <template v-if="column.dataIndex === 'price'">
+                        {{ record.price }}đ
+                    </template>
                     <template v-if="column.dataIndex === 'total'">
-                        {{ record.quantity * record.price }}
+                        {{ record.quantity * record.price }}đ
                     </template>
                     <template v-if="column.dataIndex === 'action'">
                         <a-button type="link">Xóa</a-button>
@@ -41,7 +45,7 @@
                 </a-form-item>
                 <a-divider style="margin: 0 0 10px 0;"></a-divider>
                 <a-form-item label="Người nhận">
-                    {{ addressSelected?.name }}
+                    {{ addressSelected?.recipient_name }}
                 </a-form-item>
                 <a-form-item label="Số điện thoại">
                     {{ addressSelected?.phone }}
@@ -75,20 +79,20 @@
                 <a-form-item class="gap-block">
                     <span style="font-weight: 600;">Hình thức thanh toán</span>
                     <a-radio-group v-model:value="payment">
-                        <a-radio :value="1">
+                        <a-radio value="cash">
                             Thanh toán khi nhận hàng (COD)
                         </a-radio>
-                        <a-radio :value="2">
-                            Chuyển khoản ngân hàng
+                        <a-radio value="bank_transfer">
+                            Thanh toán qua ngân hàng
                         </a-radio>
-                        <a-radio :value="3">
-                            Ví điện tử MoMo
+                        <a-radio value="credit_card">
+                            Thanh toán qua thẻ tín dụng
                         </a-radio>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item class="gap-block">
                     <span style="font-weight: 600;">Hình thức vận chuyển</span>
-                    <a-radio-group v-model:value="deliveryType">
+                    <a-radio-group @change="calculateTotal()" v-model:value="deliveryType">
                         <a-radio :value="1">
                             <img src="/src/assets/delivery-shipping.svg" alt="">
                             Giao hàng tiêu chuẩn(5-7 ngày)
@@ -97,37 +101,41 @@
                             <img src="/src/assets/delivery-shipping-sp.svg" alt="">
                             Giao hàng hỏa tốc(3-5 ngày)
                         </a-radio>
+                        <a-radio :value="3">
+                            <img src="/src/assets/delivery-shipping-sp.svg" alt="">
+                            Giao hàng nội thành(Trong ngày)
+                        </a-radio>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item>
                     <div class="order-infomation">
                         <div>Tạm tính ({{ listProduct.length }} sản phẩm)</div>
-                        <div>400.000</div>
+                        <div>{{ itemsTotal }}</div>
                     </div>
                     <div class="order-infomation">
                         <div>Phí ship</div>
-                        <div>30.000đ</div>
+                        <div>{{ customFee }}</div>
                     </div>
                 </a-form-item>
                 <a-divider style="margin: 0 0 10px 0;"></a-divider>
                 <a-form-item>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                         <div>Tổng thanh toán</div>
-                        <div>400.000</div>
+                        <div>{{ total }}</div>
                     </div>
-                    <a-button type="primary" :block="true">Đặt hàng</a-button>
+                    <a-button type="primary" :block="true" @click="createOrder">Đặt hàng</a-button>
                 </a-form-item>
             </a-form>
         </div>
         <a-modal 
             v-model:open="openModalChangeAddress" 
-            title="Danh sách địa chỉ" 
+            title="Danh sách địa chỉ"
             @ok="handleChangeAddress"
             @cancel="handleCancelChangeAddress"
             okText="Thay đổi"
             cancelText="Hủy"
         >
-            <a-list item-layout="horizontal" :data-source="listAddress">
+            <a-list item-layout="horizontal" style="height: 300px; overflow-x: hidden; overflow-y: auto;" :data-source="listAddress">
                 <template #renderItem="{ item }">
                     <a-radio-group v-model:value="radioSelected" style="width: 100%;">
                         <a-radio :value="convertToJSON(item)">
@@ -136,7 +144,12 @@
                                 :description="item.address"
                                 >
                                 <template #title>
-                                    {{ item.name }} | {{ item.phone }}
+                                    <a-flex align="center" justify="space-between" style="width: 100%;">
+                                        <div>{{ item.recipient_name }} | {{ item.phone }}</div>
+                                        <div>
+                                            <a-button type="link" @click="handleDeleteAddress(item.id)">Xóa</a-button>
+                                        </div>
+                                    </a-flex>
                                 </template>
                                 </a-list-item-meta>
                             </a-list-item>
@@ -162,11 +175,11 @@
                 v-bind="layout"
                 name="nest-messages"
                 :validate-messages="validateMessages"
-                @finish="onFinish"
+                @finish="createAddress"
                 class="shipping-infomation"
             >
-                <a-form-item name="name" label="Nguời nhận" :rules="[{ required: true }]">
-                    <a-input v-model:value="shippingInfomation.name" />
+                <a-form-item name="recipient_name" label="Nguời nhận" :rules="[{ required: true }]">
+                    <a-input v-model:value="shippingInfomation.recipient_name" />
                 </a-form-item>
                 <a-form-item
                     name="phone"
@@ -178,19 +191,28 @@
                     >
                     <a-input v-model:value="shippingInfomation.phone" />
                 </a-form-item>
-                <a-form-item :name="address" label="Địa chỉ" :rules="[{ required: true }]">
+                <a-form-item name="address" label="Địa chỉ" :rules="[{ required: true }]">
                     <a-textarea v-model:value="shippingInfomation.address" />
                 </a-form-item>
-                <a-form-item :wrapper-col="{ offset: 15 }" style="margin-top: 10px;">
+                <a-form-item :wrapper-col="{ offset: 14 }" style="margin-top: 10px;">
                     <a-button style="margin-right: 15px;" @click="handleCancelAddAddress">Hủy</a-button>
-                    <a-button type="primary" html-type="submit">Thêm mới</a-button>
+                    <a-button type="primary" html-type="submit" :loading="loadingAddress">Thêm mới</a-button>
                 </a-form-item>
             </a-form>
         </a-modal>
     </div>
 </template>
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import { useShippingAddressStore } from '@/stores/shippingAddress';
+import { message } from 'ant-design-vue';
+import { Modal } from 'ant-design-vue';
+import { useCartStore } from '@/stores/cart';
+import { useOrderStore } from '@/stores/order';
+
+const shippingAddressStore = useShippingAddressStore(); // Sử dụng store địa chỉ giao hàng
+const orderStore = useOrderStore(); // Sử dụng store đơn hàng
+const cartStore = useCartStore(); // Sử dụng store giỏ hàng
 
 const openModalChangeAddress = ref(false);
 const openModalAddAddress = ref(false);
@@ -198,6 +220,7 @@ const addressSelected = ref();
 const radioSelected = ref();
 const deliveryType = ref(1);
 const payment = ref(1);
+const loadingAddress = ref(false); // Biến để kiểm tra trạng thái loading khi thêm địa chỉ
 const formRef = ref(null); // Reference đến form để reset sau khi đóng modal
 const columns = ref([
     {
@@ -226,45 +249,8 @@ const columns = ref([
         dataIndex: 'action',
     },
 ]);
-const listProduct = ref([
-//   {
-//     product: 'John Brown',
-//     quantity: 1,
-//     price: 10000,
-//   },
-//   {
-//     product: 'Jim Green',
-//     quantity: 2,
-//     price: 20000,
-//   },
-//   {
-//     product: 'Joe Black',
-//     quantity: 1,
-//     price: 500000,
-//   },
-]);
-const listAddress = [
-    {
-        name: 'Nguyễn Hoàng Long',
-        phone: '0123456789',
-        address: 'thôn 2, xóm 3, xã thư phú, huyện thường tín, thành phố Hà nội',
-    },
-    {
-        name: 'MC Wayne',
-        phone: '0123456789',
-        address: 'thôn 2, xóm 3, xã thư phú, huyện thường tín, thành phố Hà nội',
-    },
-    {
-        name: 'John Brown',
-        phone: '0876946987',
-        address: 'thôn 2, xóm 3, xã thư phú, huyện thường tín, thành phố Hà nội',
-    },
-    {
-        name: 'John Green',
-        phone: '0876946456',
-        address: 'thôn 2, xóm 3, xã thư phú, huyện thường tín, thành phố Hà nội',
-    },
-];
+const listProduct = ref([]);
+const listAddress = ref([]);
 const layout = {
     labelCol: {
         span: 8,
@@ -277,17 +263,166 @@ const validateMessages = ref({
     required: '${label} không được để trống!',
 });
 const shippingInfomation = ref({
-    name: '',
+    recipient_name: '',
     phone: '',
     address: '',
 });
-const onFinish = values => {
-  console.log('Success:', values);
+
+const customFee = ref(0); // Biến để lưu phí ship
+const itemsTotal = ref(0); // Biến để lưu tổng tiền của giỏ hàng
+const total = ref(0); // Biến để lưu tổng tiền của đơn hàng
+
+//loading
+const loading = ref(false);
+const loadingTable = ref(false); // Biến để kiểm tra trạng thái loading khi thêm sản phẩm vào giỏ hàng
+
+onMounted( async () => {
+    // Gọi API để lấy danh sách địa chỉ
+    await getListAddress();
+    // Gọi API để lấy danh sách sản phẩm trong giỏ hàng
+    await getListItemInCart();
+    // Gọi API để tính tổng tiền
+    await calculateTotal();
+});
+
+const getListAddress = async () => {
+    try {
+        const res = await shippingAddressStore.getListAddress();
+        listAddress.value = res;
+        
+        //Nếu có địa chỉ thì lấy địa chỉ đầu tiên làm địa chỉ mặc định
+        if (res.length > 0 && !addressSelected.value) {
+            addressSelected.value = res[0];
+            radioSelected.value = JSON.stringify(res[0]);
+        } else {
+            radioSelected.value = JSON.stringify(addressSelected.value);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const getListItemInCart = async () => {
+    loadingTable.value = true; // Bắt đầu loading
+    try {
+        const res = await cartStore.getListItem().then(res => {
+            console.log(res.cart.items);
+            listProduct.value = res.cart.items.map((item, index) => ({
+                ...item,
+                product: item.book_variant.book.title,
+                quantity: item.quantity,
+                price: item.book_variant.price,
+            }));
+            // listProduct.value = res;
+        }).catch(error => {
+            console.log(error);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+    loadingTable.value = false; // Kết thúc loading
+};
+
+const createAddress = async (address) => {
+    loadingAddress.value = true; // Bắt đầu loading
+    let params = {
+        recipient_name: shippingInfomation.value.recipient_name,
+        phone: shippingInfomation.value.phone,
+        address: shippingInfomation.value.address,
+    };
+    try {
+        await shippingAddressStore.createAddress(params).then(res => {
+            message.destroy();
+            message.success('Thêm địa chỉ thành công!');
+            addressSelected.value = res;
+            radioSelected.value = JSON.stringify(addressSelected.value);
+            getListAddress(); // Gọi lại API để lấy danh sách địa chỉ mới
+        }).catch(error => {
+            console.log(error);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+    loadingAddress.value = false; // Kết thúc loading
+    // Đóng modal sau khi thêm địa chỉ thành công
+    openModalAddAddress.value = false;
+};
+
+const updateAddress = async (address) => {
+    let params = {
+        name: address.recipient_name,
+        phone: address.phone,
+        address: address.address,
+    };
+    try {
+        const res = await shippingAddressStore.updateAddress(address).then(res => {
+            message.destroy();
+            message.success('Cập nhật địa chỉ thành công!');
+            addressSelected.value = res;
+            radioSelected.value = JSON.stringify(res);
+            getListAddress(); // Gọi lại API để lấy danh sách địa chỉ mới
+        }).catch(error => {
+            console.log(error);
+        });
+        console.log(res);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const deleteAddress = async (addressId) => {
+    try {
+        await shippingAddressStore.deleteAddress(addressId).then(res => {
+            message.destroy();
+            message.success('Xóa địa chỉ thành công!');
+            addressSelected.value = null;
+            radioSelected.value = null;
+            getListAddress(); // Gọi lại API để lấy danh sách địa chỉ mới
+        }).catch(error => {
+            console.log(error);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const calculateTotal = async () => {
+    let params = {
+        custom_fee_id: deliveryType.value,
+        edition: listProduct.value.map(item => ({
+            book_variant_id: item.book_variant.id,
+            quantity: item.quantity,
+        })),
+    };
+    try {
+        await cartStore.calculateTotal(params).then(res => {
+            customFee.value = res.custom_fee;
+            itemsTotal.value = res.items_total;
+            total.value = res.total;
+        }).catch(error => {
+            console.log(error);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const handleDeleteAddress = (addressId) => {
+    Modal.confirm({
+        title: 'Xóa địa chỉ',
+        content: 'Bạn có chắc chắn muốn xóa địa chỉ này không?',
+        okText: 'Xóa',
+        cancelText: 'Hủy',
+        onOk() {
+            deleteAddress(addressId);
+        },
+    });
 };
 
 const convertToJSON = (object) => {
     return JSON.stringify(object);
 }
+
 const visibleModalAddAddress = () => {
     handleCancelChangeAddress();
     openModalAddAddress.value = true;
@@ -298,14 +433,17 @@ const handleChangeAddress = () => {
     addressSelected.value = JSON.parse(radioSelected.value);
     openModalChangeAddress.value = false;
 }
+
 const handleAddAddress = () => {
     // addressSelected.value = JSON.parse(radioSelected.value);
     openModalAddAddress.value = false;
 }
+
 const handleCancelChangeAddress = () => {
     radioSelected.value = JSON.stringify(addressSelected.value);
     openModalChangeAddress.value = false;
 }
+
 const handleCancelAddAddress = () => {
     // Đóng modal
     openModalAddAddress.value = false;
@@ -319,6 +457,35 @@ const handleCancelAddAddress = () => {
         phone: '',
         address: '',
     };
+};
+
+const createOrder = async () => {
+    let params = {
+        recipient_name: addressSelected.value.recipient_name,
+        address: addressSelected.value.address,
+        phone: addressSelected.value.phone,
+        custom_fee_id: deliveryType.value,
+        payment_type: payment.value,
+        items: listProduct.value.map(item => ({
+            book_variant_id: item.book_variant.id,
+            quantity: item.quantity,
+        })),
+    };
+    try {
+        await orderStore.createOrder(params).then(res => {
+            message.destroy();
+            message.success('Đặt hàng thành công!');
+            // Chuyển hướng đến trang chi tiết đơn hàng
+            // router.push(`/order/${res.id}`);
+            getListItemInCart();
+            console.log(res);
+            
+        }).catch(error => {
+            console.log(error);
+        });
+    } catch (error) {
+        console.log(error);
+    }
 };
 </script>
 <style lang="scss" scoped>

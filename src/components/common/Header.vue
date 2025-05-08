@@ -31,7 +31,7 @@
                         <a-menu-item @click="redirectTo('User')">
                             Thông tin tài khoản
                         </a-menu-item>
-                        <a-menu-item v-if="route.meta.layout == 'client'" @click="redirectTo('OrderHistory')">
+                        <a-menu-item v-if="route.meta.layout == 'client'" @click="redirectTo('ListOrder')">
                             Lịch sử mua hàng
                         </a-menu-item>
                         <a-menu-item @click="logout">
