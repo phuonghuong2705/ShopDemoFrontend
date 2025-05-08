@@ -51,7 +51,7 @@
                 <template #title>
                     <span class="title-form">Danh sách sản phẩm</span>
                 </template>
-                <template #bodyCell="{ column, text, index, record }">
+                <template #bodyCell="{ column, record }">
                     <template v-if="column.dataIndex === 'id'">
                         {{ record.id }}
                     </template>
@@ -70,7 +70,7 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, getCurrentInstance } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { useProductStore } from '@/stores/product';
@@ -79,6 +79,7 @@ import _ from 'lodash';
 const route = useRoute();
 const router = useRouter();
 const productStore = useProductStore();
+const { proxy } = getCurrentInstance();
 
 onMounted(() => {
     getListBookVariant();
@@ -391,7 +392,7 @@ const getListBookVariant = async () => {
                     id: item.book.id,
                     product: item.book.title,
                     edition: item.edition,
-                    price: item.price,
+                    price: proxy.$filters.normalizeNumber(item.price),
                     stock: item.stock,
                     sold: item.sold,
                 }
