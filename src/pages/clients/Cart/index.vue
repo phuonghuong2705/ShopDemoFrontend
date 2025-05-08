@@ -79,14 +79,14 @@
                 <a-form-item class="gap-block">
                     <span style="font-weight: 600;">Hình thức thanh toán</span>
                     <a-radio-group v-model:value="payment">
-                        <a-radio :value="1">
+                        <a-radio value="cash">
                             Thanh toán khi nhận hàng (COD)
                         </a-radio>
-                        <a-radio :value="2">
-                            Chuyển khoản ngân hàng
+                        <a-radio value="bank_transfer">
+                            Thanh toán qua ngân hàng
                         </a-radio>
-                        <a-radio :value="3">
-                            Ví điện tử MoMo
+                        <a-radio value="credit_card">
+                            Thanh toán qua thẻ tín dụng
                         </a-radio>
                     </a-radio-group>
                 </a-form-item>
@@ -123,7 +123,7 @@
                         <div>Tổng thanh toán</div>
                         <div>{{ total }}</div>
                     </div>
-                    <a-button type="primary" :block="true">Đặt hàng</a-button>
+                    <a-button type="primary" :block="true" @click="createOrder">Đặt hàng</a-button>
                 </a-form-item>
             </a-form>
         </div>
@@ -208,6 +208,11 @@ import { useShippingAddressStore } from '@/stores/shippingAddress';
 import { message } from 'ant-design-vue';
 import { Modal } from 'ant-design-vue';
 import { useCartStore } from '@/stores/cart';
+import { useOrderStore } from '@/stores/order';
+
+const shippingAddressStore = useShippingAddressStore(); // Sử dụng store địa chỉ giao hàng
+const orderStore = useOrderStore(); // Sử dụng store đơn hàng
+const cartStore = useCartStore(); // Sử dụng store giỏ hàng
 
 const openModalChangeAddress = ref(false);
 const openModalAddAddress = ref(false);
@@ -215,8 +220,6 @@ const addressSelected = ref();
 const radioSelected = ref();
 const deliveryType = ref(1);
 const payment = ref(1);
-const shippingAddressStore = useShippingAddressStore();
-const cartStore = useCartStore(); // Sử dụng store giỏ hàng
 const loadingAddress = ref(false); // Biến để kiểm tra trạng thái loading khi thêm địa chỉ
 const formRef = ref(null); // Reference đến form để reset sau khi đóng modal
 const columns = ref([
@@ -419,6 +422,7 @@ const handleDeleteAddress = (addressId) => {
 const convertToJSON = (object) => {
     return JSON.stringify(object);
 }
+
 const visibleModalAddAddress = () => {
     handleCancelChangeAddress();
     openModalAddAddress.value = true;
@@ -429,14 +433,17 @@ const handleChangeAddress = () => {
     addressSelected.value = JSON.parse(radioSelected.value);
     openModalChangeAddress.value = false;
 }
+
 const handleAddAddress = () => {
     // addressSelected.value = JSON.parse(radioSelected.value);
     openModalAddAddress.value = false;
 }
+
 const handleCancelChangeAddress = () => {
     radioSelected.value = JSON.stringify(addressSelected.value);
     openModalChangeAddress.value = false;
 }
+
 const handleCancelAddAddress = () => {
     // Đóng modal
     openModalAddAddress.value = false;
@@ -450,6 +457,35 @@ const handleCancelAddAddress = () => {
         phone: '',
         address: '',
     };
+};
+
+const createOrder = async () => {
+    let params = {
+        recipient_name: addressSelected.value.recipient_name,
+        address: addressSelected.value.address,
+        phone: addressSelected.value.phone,
+        custom_fee_id: deliveryType.value,
+        payment_type: payment.value,
+        items: listProduct.value.map(item => ({
+            book_variant_id: item.book_variant.id,
+            quantity: item.quantity,
+        })),
+    };
+    try {
+        await orderStore.createOrder(params).then(res => {
+            message.destroy();
+            message.success('Đặt hàng thành công!');
+            // Chuyển hướng đến trang chi tiết đơn hàng
+            // router.push(`/order/${res.id}`);
+            getListItemInCart();
+            console.log(res);
+            
+        }).catch(error => {
+            console.log(error);
+        });
+    } catch (error) {
+        console.log(error);
+    }
 };
 </script>
 <style lang="scss" scoped>

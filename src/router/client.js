@@ -6,6 +6,8 @@ import Category from "../pages/clients/Category/index.vue";
 import ListProduct from "@/components/clients/ListProduct/ListProduct.vue";
 import Cart from "../pages/clients/Cart/index.vue";
 import Order from "../pages/clients/Order/index.vue";
+import OrderDetail from "../components/clients/Order/OrderDetail.vue";
+import ListOrder from "../components/clients/Order/index.vue";
 import Login from "../pages/logins/Login.vue";
 import User from "../pages/clients/User/index.vue"
 import Register from "../pages/logins/Register.vue";
@@ -132,6 +134,26 @@ const client = [
                 meta: {
                     title: 'Đơn hàng',
                 },
+                children: [
+                    {
+                        title: 'ListOrder',
+                        path: '',
+                        name: 'ListOrder',
+                        component: ListOrder,
+                        meta: {
+                            title: 'Danh sách đơn hàng',
+                        },
+                    },
+                    {
+                        title: 'OrderDetail',
+                        path: 'order-detail/:id',
+                        name: 'OrderDetail',
+                        component: OrderDetail,
+                        meta: {
+                            title: 'Chi tiết đơn hàng',
+                        },
+                    }
+                ]
             },
         ]
     },

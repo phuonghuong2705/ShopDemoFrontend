@@ -1,12 +1,53 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import api from '@/api/order';
 
-export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
-  }
+export const useOrderStore = defineStore('order', () => {
+    const getListOrder = async function  (data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let res = await api.getListOrder(data);
+                resolve(res);
+            } catch (e) {
+                console.log("err: ", e);
+                reject(e);
+            }
+        });
+    }
 
-  return { count, doubleCount, increment }
+    const createOrder = async function  (data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let res = await api.createOrder(data);
+                resolve(res);
+            } catch (e) {
+                console.log("err: ", e);
+                reject(e);
+            }
+        });
+    }
+
+    const updateOrder = async function  (data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let res = await api.updateOrder(data);
+                resolve(res);
+            } catch (e) {
+                console.log("err: ", e);
+                reject(e);
+            }
+        });
+    }
+    const getDetailOrder = async function  (data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let res = await api.getDetailOrder(data);
+                resolve(res);
+            } catch (e) {
+                console.log("err: ", e);
+                reject(e);
+            }
+        });
+    }
+    
+  return { getListOrder , getDetailOrder, createOrder, updateOrder }
 })
