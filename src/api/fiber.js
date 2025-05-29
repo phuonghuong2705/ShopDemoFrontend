@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default {
     uploadFile: (data) => {
-        const url = `${process.env.fiberApi}/v1.0/file/upload`;
+        const url = `/fiber-api/v1.0/file/upload`;
         return new Promise((resolve, reject) => {
             axios.post(url, data, {
                 headers: {

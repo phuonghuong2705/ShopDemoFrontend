@@ -56,6 +56,7 @@ const redirectTo = (name) => {
         justify-content: flex-start;
         flex-wrap: wrap;
         .feature-card{
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 30%;
             .title{
                 font-weight: 600;

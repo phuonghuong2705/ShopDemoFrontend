@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="slider-container">
          <div class="img-background">
             <div class="overlay"></div>
@@ -156,5 +156,63 @@ onUnmounted(() => {
 
 .prev-button:hover, .next-button:hover {
     background-color: rgba(0, 0, 0, 0.8);
+}
+</style> -->
+<template>
+    <div class="slider-container">
+        <a-carousel arrows>
+            <template #prevArrow>
+            <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
+                <left-circle-outlined />
+            </div>
+            </template>
+            <template #nextArrow>
+            <div class="custom-slick-arrow" style="right: 10px">
+                <right-circle-outlined />
+            </div>
+            </template>
+            <img src="https://bizweb.dktcdn.net/100/326/228/themes/683227/assets/slider3-for.png?1744347873648" style="object-fit: contain;" alt="">
+            <img src="https://bizweb.dktcdn.net/100/326/228/themes/683227/assets/slider2-for.png?1744347873648" style="object-fit: contain;" alt="">
+        </a-carousel>
+    </div>
+</template>
+<script setup>
+import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+import { Carousel } from 'ant-design-vue';
+</script>
+<style scoped>
+.slider-container {
+    width: 55vw;
+    height: 390px;
+}
+/* For demo */
+:deep(.slick-slide) {
+    text-align: center;
+    height: 390px;
+    line-height: 160px;
+    background: #364d79;
+    overflow: hidden;
+}
+
+:deep(.slick-arrow.custom-slick-arrow) {
+    width: 25px;
+    height: 25px;
+    font-size: 25px;
+    color: #fff;
+    background-color: rgba(31, 45, 61, 0.11);
+    transition: ease all 0.3s;
+    opacity: 0.3;
+    z-index: 1;
+}
+:deep(.slick-arrow.custom-slick-arrow:before) {
+    display: none;
+}
+:deep(.slick-arrow.custom-slick-arrow:hover) {
+    color: #fff;
+    opacity: 0.5;
+}
+
+:deep(.slick-slide h3) {
+    color: #fff;
 }
 </style>

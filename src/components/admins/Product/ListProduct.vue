@@ -75,6 +75,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { useProductStore } from '@/stores/product';
 import _ from 'lodash';
+import filter from '@/utils/filters';
 
 const route = useRoute();
 const router = useRouter();
@@ -83,6 +84,8 @@ const { proxy } = getCurrentInstance();
 
 onMounted(() => {
     getListBookVariant();
+    console.log(proxy.$filters);
+    
 })
 
 const pageSize = ref(6);
@@ -392,7 +395,7 @@ const getListBookVariant = async () => {
                     id: item.book.id,
                     product: item.book.title,
                     edition: item.edition,
-                    price: proxy.$filters.normalizeNumber(item.price),
+                    price: filter.normalizeNumber(item.price),
                     stock: item.stock,
                     sold: item.sold,
                 }

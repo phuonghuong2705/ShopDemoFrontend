@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { create, remove } from 'lodash';
+import { create } from 'lodash';
 
 export default {
-    getListItem: (data) => {
+    getListReview: (data) => {
         const searchParams = new URLSearchParams(data);
-        const url = `${process.env.api}/cart`;
+        const url = `${process.env.api}/get-list-order?` + searchParams;
         return new Promise((resolve, reject) => {
             axios.get(url, {
                 withCredentials: true,
@@ -22,8 +22,8 @@ export default {
         });
     },
 
-    addItemToCart: (data) => {
-        const url = `${process.env.api}/add-to-cart`;
+    createReview: (data) => {
+        const url = `${process.env.api}/reviews`;
         return new Promise((resolve, reject) => {
             axios.post(url, data, {
                 withCredentials: true,
@@ -40,10 +40,10 @@ export default {
                 })
         });
     },
-    createAddress: (data) => {
-        const url = `${process.env.api}/create-address`;
+    updateOrder: (data) => {
+        const url = `${process.env.api}/update-order`;
         return new Promise((resolve, reject) => {
-            axios.post(url, data, {
+            axios.patch(url, data, {
                 withCredentials: true,
             })
                 .then((response) => {
@@ -58,46 +58,10 @@ export default {
                 })
         });
     },
-    deleteAddress: (id) => {
-        const url = `${process.env.api}/delete-address/${id}`;
+    getDetailOrder: (id) => {
+        const url = `${process.env.api}/get-detail-order/${id}`;
         return new Promise((resolve, reject) => {
-            axios.delete(url, {
-                withCredentials: true,
-            })
-                .then((response) => {
-                    if (response.data.status) {
-                        resolve(response.data.data);
-                    } else {
-                        reject(response);
-                    }
-                    resolve(response);
-                }).catch((response) => {
-                    reject(response);
-                })
-        });
-    },
-    calculateTotal: (data) => {
-        const url = `${process.env.api}/calculate-total`;
-        return new Promise((resolve, reject) => {
-            axios.post(url, data, {
-                withCredentials: true,
-            })
-                .then((response) => {
-                    if (response.data.status) {
-                        resolve(response.data.data);
-                    } else {
-                        reject(response);
-                    }
-                    resolve(response);
-                }).catch((response) => {
-                    reject(response);
-                })
-        });
-    },
-    removeItemFromCart: (book_variant_id) => {
-        const url = `${process.env.api}/remove-from-cart/${book_variant_id}`;
-        return new Promise((resolve, reject) => {
-            axios.delete(url, {
+            axios.get(url, {
                 withCredentials: true,
             })
                 .then((response) => {

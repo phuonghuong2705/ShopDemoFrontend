@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import api from '@/api/cart';
+import api from '@/api/review';
 
-export const useCartStore = defineStore('cart', () => {
-    const getListItem = async function  (data) {
+export const useReviewStore = defineStore('review', () => {
+    const createReview = async function  (data) {
         return new Promise(async (resolve, reject) => {
             try {
-                let res = await api.getListItem(data);
+                let res = await api.createReview(data);
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
@@ -14,10 +14,10 @@ export const useCartStore = defineStore('cart', () => {
         });
     }
 
-    const addItemToCart = async function  (data) {
+    const createOrder = async function  (data) {
         return new Promise(async (resolve, reject) => {
             try {
-                let res = await api.addItemToCart(data);
+                let res = await api.createOrder(data);
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
@@ -26,10 +26,10 @@ export const useCartStore = defineStore('cart', () => {
         });
     }
 
-    const calculateTotal = async function  (data) {
+    const updateOrder = async function  (data) {
         return new Promise(async (resolve, reject) => {
             try {
-                let res = await api.calculateTotal(data);
+                let res = await api.updateOrder(data);
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
@@ -37,11 +37,10 @@ export const useCartStore = defineStore('cart', () => {
             }
         });
     }
-
-    const removeItemFromCart = async function  (data) {
+    const getDetailOrder = async function  (data) {
         return new Promise(async (resolve, reject) => {
             try {
-                let res = await api.removeItemFromCart(data);
+                let res = await api.getDetailOrder(data);
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
@@ -50,5 +49,5 @@ export const useCartStore = defineStore('cart', () => {
         });
     }
     
-  return { getListItem , addItemToCart, calculateTotal, removeItemFromCart }
+  return { createReview , getDetailOrder, createOrder, updateOrder }
 })

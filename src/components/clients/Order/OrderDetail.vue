@@ -21,13 +21,13 @@
                         {{ record.variant_edition }}
                     </template>
                     <template v-if="column.dataIndex === 'price'">
-                        {{ record.price }}đ
+                        {{ filters.normalizeNumber(record.price) }}đ
                     </template>
                     <template v-if="column.dataIndex === 'total'">
-                        {{ record.quantity * record.price }}đ
+                        {{ filters.normalizeNumber(record.quantity * record.price) }}đ
                     </template>
                     <template v-if="column.dataIndex === 'action'">
-                        <a-button type="link">Đánh giá</a-button>
+                        <a-button type="link" @click="createReview(record)">Đánh giá</a-button>
                     </template>
                 </template>
             </a-table>
@@ -77,35 +77,51 @@
                 <a-form-item>
                     <div class="order-infomation">
                         <div> {{ listProduct.length }} sản phẩm</div>
-                        <div>{{ itemsTotal }}đ</div>
+                        <div>{{ filters.normalizeNumber(itemsTotal) }}đ</div>
                     </div>
                     <div class="order-infomation">
                         <div>Phí ship</div>
-                        <div>{{ customFee?.price }}đ</div>
+                        <div>{{ filters.normalizeNumber(customFeePrice) }}đ</div>
                     </div>
                 </a-form-item>
                 <a-divider style="margin: 0 0 10px 0;"></a-divider>
                 <a-form-item>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                         <div>Tổng thanh toán</div>
-                        <div>{{ itemsTotal + customFee?.price }}đ</div>
+                        <div>{{ filters.normalizeNumber(itemsTotal + customFeePrice) }}đ</div>
                     </div>
                     <a-button type="primary" title="Tính năng hiện không khả dụng, vui lòng liên hệ với shop để được hỗ trợ" :block="true" @click="" :disabled="true">Hủy đơn hàng</a-button>
                 </a-form-item>
             </a-form>
         </div>
+        <a-modal v-model:open="showRatingModal" title="Đánh giá sản phẩm" @ok="handleRatingSubmit" @cancel="handleRatingCancel">
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div>
+                    <div style="margin-bottom: 8px;">Đánh giá của bạn:</div>
+                    <a-rate v-model:value="ratingValue" allow-half/>
+                </div>
+                <div>
+                    <div style="margin-bottom: 8px;">Nhận xét:</div>
+                    <a-textarea v-model:value="ratingComment" placeholder="Nhập nhận xét của bạn" :rows="4" />
+                </div>
+            </div>
+        </a-modal>
     </div>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useOrderStore } from '@/stores/order';
+import { useReviewStore } from '@/stores/review';
 import { useRouter, useRoute } from 'vue-router';
+import filters from '@/utils/filters';
 
 const router = useRouter(); // Sử dụng router để điều hướng
 const route = useRoute(); // Sử dụng route để lấy thông tin đường dẫn hiện tại
 
 const orderStore = useOrderStore(); // Sử dụng store đơn hàng
+const reviewStore = useReviewStore(); // Sử dụng store đánh giá
 const customFee = ref(null);
+const customFeePrice = ref(0); // Biến để lưu phí ship
 const paymentType = ref(null);
 const orderStatus = ref(null); // Biến để lưu trạng thái đơn hàng
 const columns = ref([
@@ -140,15 +156,17 @@ const columns = ref([
     },
 ]);
 const listProduct = ref([]);
-
 const shippingInfomation = ref({
     recipient_name: null,
     phone: null,
     address: null,
 });
-
 const paymentStatus = ref(0); // Biến để lưu phí ship
 const itemsTotal = ref(0); // Biến để lưu tổng tiền của giỏ hàng
+
+const showRatingModal = ref(false); // Biến để điều khiển hiển thị modal đánh giá
+const ratingValue = ref(0); // Biến để lưu giá trị đánh giá
+const ratingComment = ref(null); // Biến để lưu nhận xét của người dùng
 
 //loading
 const loading = ref(false);
@@ -174,12 +192,40 @@ const getDetailOrder = async (id) => {
             shippingInfomation.value.address = res.address;
             paymentType.value = res.payment_type;
             customFee.value = res.custom_fee;
+            customFeePrice.value = parseInt(res.custom_fee.price);
             paymentStatus.value = res.payment_status;
-            itemsTotal.value = res.total_price;
+            itemsTotal.value = parseInt(res.total_price);
             orderStatus.value = res.status;
         }).catch(error => {
             console.log(error);
         });
+};
+
+const createReview = async (productId) => {
+    console.log(productId);
+    
+    showRatingModal.value = true;
+    let params = {
+        product_id: productId,
+        rating_value: ratingValue.value,
+        rating_comment: ratingComment.value,
+    };
+    await reviewStore.createReview(orderId, productId, ratingValue, ratingComment).then(res => {
+        console.log('Đánh giá thành công:', res);
+    }).catch(error => {
+        console.log('Lỗi khi gửi đánh giá:', error);
+    });
+};
+
+const handleRatingSubmit = () => {
+    // Xử lý gửi đánh giá ở đây
+    console.log('Đánh giá:', ratingValue.value);
+    console.log('Nhận xét:', ratingComment.value);
+    showRatingModal.value = false; // Đóng modal sau khi gửi đánh giá
+};
+
+const handleRatingCancel = () => {
+    showRatingModal.value = false; // Đóng modal khi nhấn nút hủy
 };
 
 </script>

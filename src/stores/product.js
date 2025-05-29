@@ -13,9 +13,14 @@ export const useProductStore = defineStore('product', () => {
             }
         });
     }
-    const getListBook = async function  (data) {
+    const getListBook = async function  (data = {}) {
         return new Promise(async (resolve, reject) => {
             try {
+                Object.keys(data).forEach(key => {
+                    if (data[key] === null) {
+                        delete data[key];
+                    }
+                });
                 let res = await api.getListBook(data);
                 resolve(res);
             } catch (e) {
@@ -70,6 +75,17 @@ export const useProductStore = defineStore('product', () => {
             }
         });
     }
+    const getListSubCategory = async function  (data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let res = await api.getListSubCategory(data);
+                resolve(res);
+            } catch (e) {
+                console.log("err: ", e);
+                reject(e);
+            }
+        });
+    }
 
-  return { getListBookVariant, getListBook, getDetailBook, updateBook, createBook, deleteBook }
+  return { getListBookVariant, getListBook, getDetailBook, updateBook, createBook, deleteBook, getListSubCategory }
 })

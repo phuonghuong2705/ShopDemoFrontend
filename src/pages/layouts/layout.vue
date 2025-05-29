@@ -80,7 +80,7 @@ const redirectToLogin = () => {
                 .main-content {
                     flex: 1;
                     // background-color: #f0eded;
-                    // background-color: white;
+                    background-color: white;
                     overflow: auto;
                 }
             }

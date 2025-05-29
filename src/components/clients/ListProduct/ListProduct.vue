@@ -1,14 +1,27 @@
 <template>
     <div class="content">
         <div class="filter">
-            <FilterBox />
+            <FilterBox
+                v-model:subGender="subGender"
+                v-model:subGenderSelect="subGenderSelect"
+                v-model:searchName="searchName"
+                v-model:softBy="softBy"
+                v-model="rangePrice"
+                @update:rangePrice="handleChangeRangePrice"
+                @update:subGenderSelect="handleChangeSubGender"
+                @update:searchName="handleChangeSearchName"
+                @update:softBy="handleChangeSoftBy"
+            />
         </div>
         <a-spin :spinning="loading">
-            <div class="list-product">
+            <div class="list-product" v-if="listProduct.length > 0 && !loading">
                 <ProductItem
                     v-for="prod in listProduct"
                     :product="prod"
                 />
+            </div>
+            <div v-else-if="listProduct.length == 0 && !loading" class="no-product">
+                <h3>Không có sản phẩm nào</h3>
             </div>
         </a-spin>
     </div>
@@ -19,10 +32,12 @@ import ProductItem from '@/components/clients/ListProduct/ProductItem.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProductStore } from '@/stores/product';
+import { max } from 'lodash';
 
 const route = useRoute();
 const router = useRouter();
 const productStore = useProductStore();
+const categoryId = ref(null);
 
 onMounted(() => {
     getListBookByCategory();
@@ -30,39 +45,82 @@ onMounted(() => {
 
 const loading = ref(false);
 const listProduct = ref([]);
+const subGender = ref([]);
+const subGenderSelect = ref(null);
+const searchName = ref(null);
+const softBy = ref('default');
+const rangePrice = ref({
+    min: null,
+    max: null,
+});
 
 const getListBookByCategory = async () => {
     if (router.currentRoute.value.name == 'Education') {
-        getListProduct(1);
+        categoryId.value = 1;
     } else if (router.currentRoute.value.name == 'LifeSkills') {
-        getListProduct(2);
+        categoryId.value = 2;
     } else if (router.currentRoute.value.name == 'Business') {
-        getListProduct(3);
+        categoryId.value = 3;
     } else if (router.currentRoute.value.name == 'Entertainment') {
-        getListProduct(4);
+        categoryId.value = 4;
     } else if (router.currentRoute.value.name == 'Academic') {
-        getListProduct(5);
+        categoryId.value = 5;
     } else if (router.currentRoute.value.name == 'Lifestyle') {
-        getListProduct(6);
-    } else {
-        getListProduct();
+        categoryId.value = 6;
     }
-    console.log(router.currentRoute.value.name);
+    getListProduct();
+    getListSubCategory();
+};
+
+const getListSubCategory = async () => {
+    let params = {
+        category_id: categoryId.value || null,
+    };
+    await productStore.getListSubCategory(params).then((res) => {
+        subGender.value = res || [];
+    }).catch((error) => {
+        console.log(error);
+    })
 };
     
-const getListProduct = async (categoryId) => {
+const getListProduct = async () => {
     loading.value = true;
     let params = {
-        category_id: categoryId,
+        category_id: categoryId.value || null,
+        subgenre_id: subGenderSelect.value || null,
+        book_name: searchName.value || null,
+        soft_by: softBy.value || 'default',
+        max_price: rangePrice.value.max || null,
+        min_price: rangePrice.value.min || null,
     };
     try {
         const res = await productStore.getListBook(params);
-        listProduct.value = res;
+        listProduct.value = res || [];
     } catch (error) {
         console.log(error);
     } finally {
         loading.value = false;
     }
+};
+
+const handleChangeSubGender = (value) => {
+    subGenderSelect.value = value;
+    getListProduct();
+};
+
+const handleChangeSearchName = (value) => {
+    searchName.value = value;
+    getListProduct();
+};
+
+const handleChangeSoftBy = (value) => {
+    softBy.value = value;
+    getListProduct();
+};
+
+const handleChangeRangePrice = (value) => {
+    rangePrice.value = value;
+    getListProduct();
 };
 
 </script>

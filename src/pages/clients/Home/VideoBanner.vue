@@ -72,6 +72,6 @@ button {
 .video-container {
     width: 100%; /* Hoặc một kích thước cụ thể như 80% */
     height: 100%; /* Giới hạn kích thước tối đa */
-    margin: auto;
+    margin: auto;   
 }
 </style>

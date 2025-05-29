@@ -106,7 +106,11 @@ export const useAuthStore = defineStore('auth', () => {
                 let res = await api.getUser();
                 userInfo.value = res.data;
                 type.value = res.type;
-                userInfo.value.birthday = dayjs(res.data.birthday).format('DD-MM-YYYY');
+                if (res.data.birthday) {
+                    userInfo.value.birthday = dayjs(res.data.birthday).format('YYYY-MM-DD');
+                } else {
+                    userInfo.value.birthday = null;
+                }
                 resolve(res);
             } catch (e) {
                 console.log("err: ", e);
