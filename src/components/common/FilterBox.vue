@@ -1,28 +1,28 @@
 <template>
     <div class="filter">
         <a-flex class="filter-group" align="start" justify="space-evenly">
-            <a-input v-model="value" class="filter-option" placeholder="Nhập tên sách"></a-input>
+            <a-input v-model:value="searchName" @change="handleChangeSearchName" class="filter-option" placeholder="Nhập tên sách"></a-input>
             <a-select
-                v-model:value="value"
+                v-model:value="subGenderSelect"
                 show-search
                 placeholder="Thể loại"
                 class="filter-option"
-                :options="options"
+                :options="subGender"
+                :allowClear="true"
+                :field-names="{ label: 'name', value: 'id' }"
+                @change="handleChangeSubGender"
                 :filter-option="filterOption"
-                @focus="handleFocus"
-                @blur="handleBlur"
-                @change="handleChange"
+                :getPopupContainer="trigger => trigger.parentNode"  
             ></a-select>
             <a-select
-                v-model:value="value"
+                v-model:value="softBy"
                 show-search
                 placeholder="Sắp xếp"
                 class="filter-option"
-                :options="options"
+                :options="listSoftBy"
+                :field-names="{ label: 'name', value: 'value' }"
                 :filter-option="filterOption"
-                @focus="handleFocus"
-                @blur="handleBlur"
-                @change="handleChange"
+                @change="handleChangeSoftBy"
             ></a-select>
             <div class="input-range">
                 <div class="title-price"
@@ -36,8 +36,8 @@
                         :bordered="false"
                         placeholder="Từ"
                         :controls="false"
-                        v-model:value="value"
-                        @blur="checkValidate(item,index)"
+                        v-model:value="rangePrice.min"
+                        @change="(value) => handleChangeRangePrice('min', value)"
                         :disabled="false"
                     ></a-input-number>
                     <div class="icon-to">
@@ -56,8 +56,8 @@
                         :bordered="false"
                         placeholder="Đến"
                         :controls="false"
-                        v-model:value="value"
-                        @blur="checkValidate(item,index)"
+                        v-model:value="rangePrice.max"
+                        @change="(value) => handleChangeRangePrice('max', value)"                        
                         :disabled="false"
                     ></a-input-number>
                 </div>
@@ -72,7 +72,74 @@
 </template>
 
 <script setup>
+import { ref, defineEmits, defineProps } from 'vue';
+import { debounce } from 'lodash';
+const props = defineProps({
+    subGender: {
+        type: Array,
+        default: () => []
+    },
+    subGenderSelect: {
+        type: Number,
+        default: null
+    },
+    searchName: {
+        type: String,
+        default: null
+    },
+    softBy: {
+        type: String,
+        default: 'default'
+    },
+    rangePrice: {
+        type: Object,
+        default: () => ({ min: null, max: null })
+    }
+});
 
+const subGenderSelect = ref(props.subGenderSelect);
+const searchName = ref(props.searchName);
+const softBy = ref(props.softBy);
+const rangePrice = ref({
+    min: props.rangePrice.min,
+    max: props.rangePrice.max
+});
+
+const emit = defineEmits(['update:subGenderSelect', 'update:searchName', 'update:softBy']);
+
+const listSoftBy = [
+    { name: 'Mặc định', value: 'default' },
+    { name: 'A-Z', value: 'asc' },
+    { name: 'Z-A', value: 'desc' },
+];
+
+const disabled = ref(false);
+
+const filterOption = (input, option) => {
+    return option.name.toLowerCase().includes(input.toLowerCase());
+};
+
+const handleChangeSubGender = (value) => {
+    emit('update:subGenderSelect', value);
+};
+
+const handleChangeSearchName = debounce((value) => {
+    emit('update:searchName', searchName.value);
+}, 1000);
+
+const handleChangeSoftBy = (value) => {
+    emit('update:softBy', value);
+}
+
+const handleChangeRangePrice = debounce((type, value) => {
+    emit('update:rangePrice', rangePrice.value);
+}, 1000);
+
+const handleChange = (value) => {
+    console.log('Selected value:', value);
+};
+
+const value = ref(0);
 </script>
 <style lang="scss" scoped>
 .filter{

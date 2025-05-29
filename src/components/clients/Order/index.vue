@@ -34,7 +34,7 @@
                             <a>{{ text }}</a>
                         </template>
                         <template v-if="column.dataIndex === 'total_price'">
-                            {{ record.total_price }}đ
+                            {{ filters.normalizeNumber(record.total_price + record.custom_fee) }}đ
                         </template>
                         <template v-if="column.dataIndex === 'payment_type'">
                             {{ record.payment_type == 'cash' ? 'Thanh toán khi nhận hàng' : record.payment_type == 'bank_transfer' ? 'Chuyển khoản ngân hàng' : record.payment_type == 'credit_card' ? 'Thẻ tín dụng' : record.payment_type  }}
@@ -64,6 +64,7 @@ import { ref, onMounted } from 'vue';
 import { useOrderStore } from '@/stores/order';
 import _ from 'lodash';
 import { useRouter, useRoute } from 'vue-router';
+import filters from '@/utils/filters';
 
 
 const router = useRouter();
@@ -148,6 +149,7 @@ const getListOrder = () => {
                 total_price: parseInt(item.total_price),
                 payment_status: item.payment_status,
                 status: item.status,
+                custom_fee: parseInt(item.custom_fee.price),
                 payment_type: item.payment_type,
                 transport_fee: item.custom_fee.title,
             };

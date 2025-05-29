@@ -178,9 +178,10 @@ async function loadFile(event){
 
 const updatedInformation = () => {
     updateInformationForm.value = {...userInformation.value};
+    console.log(userInformation.value);
+    
     if(updateInformationForm.value.birthday){
         updateInformationForm.value.birthday = dayjs(userInformation.value.birthday, 'DD-MM-YYYY');
-        console.log(updateInformationForm.value.birthday);
     }
     modalChangeInfomationVisible.value = true;
 }

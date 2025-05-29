@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <a-flex  justify="space-around" style="height: 60px;" align="center" horizontal>
+        <a-flex  justify="space-evenly" style="height: 60px;" align="center" horizontal>
             <a-flex gap="20" align="center">
                 <a-typography-title :level="2" style="margin-bottom: 0;">BookStore</a-typography-title>
                 <a-menu v-if="route.meta.layout == 'client'" v-model:selectedKeys="current" mode="horizontal" @click="handleClick" :items="items" />
@@ -9,7 +9,7 @@
                 <a-input
                     v-if="route.meta.layout == 'client'"
                     placeholder="Tìm kiếm"
-                    style="width: 300px"
+                    style="width: 500px; border-radius: 20px;"
                 >
                     <template #suffix>
                         <SearchOutlined />
@@ -117,9 +117,6 @@ const redirectToRegister = () => {
 }
 
 const handleClick = menuInfo => {
-    console.log(menuInfo);
-    console.log(current.value);
-    
     redirectToRouter(menuInfo.item.router);
 }
 
@@ -132,7 +129,7 @@ const redirectToRouter = (name = '') => {
 const logout = () => {
     authStore.logout().then(res => {
     }).catch(err => {
-        console.log(res);
+        console.log(err);
     })
 }
 </script>

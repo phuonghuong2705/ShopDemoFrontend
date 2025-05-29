@@ -30,11 +30,11 @@
                         <div class="author">Tác giả: {{ author }}</div>
                         <div class="rating">
                             <div>{{ averageRating }}</div>
-                            <a-rate style="font-size: 14px; line-height: 1;" :value="averageRating" allow-half />
+                            <a-rate :disabled="true" style="font-size: 14px; line-height: 1;" :value="averageRating" allow-half />
                             <div>Đã bán: {{ totalSold }}</div>
                         </div>
                         <div class="price">
-                            {{ price }}<sup>đ</sup>
+                            {{ filters.normalizeNumber(price) }}<sup>đ</sup>
                         </div>
                         <div class="type">
                             Phiên bản
@@ -59,10 +59,10 @@
                         <div class="total">
                             Tạm tính
                             <div style="font-size: 24px; font-weight: 600;">
-                                {{ price * quantity }}<sup>đ</sup>
+                                {{ filters.normalizeNumber(price * quantity) }}<sup>đ</sup>
                             </div>
                         </div>
-                        <a-button class="add-to-cart" type="primary" size="large" @click="addToCart()">Thêm vào giỏ hàng</a-button>
+                        <a-button class="add-to-cart" :disabled="selectedEdition?.stock == 0" type="primary" size="large" @click="addToCart()">Thêm vào giỏ hàng</a-button>
                     </a-flex>
                 </a-flex>
             </a-card>
@@ -79,6 +79,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import { useProductStore } from '@/stores/product';
 import { useCartStore } from '@/stores/cart';
+import filters from '@/utils/filters';
+import { message } from 'ant-design-vue';
 
 onMounted(() => {
     detailProduct();
@@ -204,7 +206,8 @@ const addToCart = () => {
         quantity: quantity.value,
     };
     cartStore.addItemToCart(params).then((res) => {
-        console.log(res);
+        message.destroy();
+        message.success("Thêm vào giỏ hàng thành công");
     }).catch((error) => {
         console.log(error);
     });

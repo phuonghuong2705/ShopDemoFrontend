@@ -114,5 +114,24 @@ export default {
                 })
         });
     },
+    getListSubCategory: (data) => {
+        const searchParams = new URLSearchParams(data);
+        const url = `${process.env.api}/get-list-subgenre?`+ searchParams;
+        return new Promise((resolve, reject) => {
+            axios.get(url, {
+                withCredentials: true,
+            })
+                .then((response) => {
+                    if (response.data.status) {
+                        resolve(response.data.data);
+                    } else {
+                        reject(response);
+                    }
+                    resolve(response);
+                }).catch((response) => {
+                    reject(response);
+                })
+        });
+    },  
 
 }

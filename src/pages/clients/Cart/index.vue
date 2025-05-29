@@ -18,13 +18,13 @@
                         <a>{{ text }}</a>
                     </template>
                     <template v-if="column.dataIndex === 'price'">
-                        {{ record.price }}đ
+                        {{ filters.normalizeNumber(record.price) }}đ
                     </template>
                     <template v-if="column.dataIndex === 'total'">
-                        {{ record.quantity * record.price }}đ
+                        {{ filters.normalizeNumber(record.quantity * record.price) }}đ
                     </template>
                     <template v-if="column.dataIndex === 'action'">
-                        <a-button type="link">Xóa</a-button>
+                        <a-button type="link" @click="removeItemFromCart(record.book_variant_id)">Xóa</a-button>
                     </template>
                 </template>
             </a-table>
@@ -110,18 +110,18 @@
                 <a-form-item>
                     <div class="order-infomation">
                         <div>Tạm tính ({{ listProduct.length }} sản phẩm)</div>
-                        <div>{{ itemsTotal }}</div>
+                        <div>{{ itemsTotal }}đ</div>
                     </div>
                     <div class="order-infomation">
                         <div>Phí ship</div>
-                        <div>{{ customFee }}</div>
+                        <div>{{ filters.normalizeNumber(customFee) }}đ</div>
                     </div>
                 </a-form-item>
                 <a-divider style="margin: 0 0 10px 0;"></a-divider>
                 <a-form-item>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                         <div>Tổng thanh toán</div>
-                        <div>{{ total }}</div>
+                        <div>{{ filters.normalizeNumber(total) }}đ</div>
                     </div>
                     <a-button type="primary" :block="true" @click="createOrder">Đặt hàng</a-button>
                 </a-form-item>
@@ -209,6 +209,7 @@ import { message } from 'ant-design-vue';
 import { Modal } from 'ant-design-vue';
 import { useCartStore } from '@/stores/cart';
 import { useOrderStore } from '@/stores/order';
+import filters from '@/utils/filters';
 
 const shippingAddressStore = useShippingAddressStore(); // Sử dụng store địa chỉ giao hàng
 const orderStore = useOrderStore(); // Sử dụng store đơn hàng
@@ -230,6 +231,7 @@ const columns = ref([
     {
         title: 'Sản phẩm',
         dataIndex: 'product',
+        width: '35%',
     },
     {
         title: 'Số lượng',
@@ -306,14 +308,12 @@ const getListItemInCart = async () => {
     loadingTable.value = true; // Bắt đầu loading
     try {
         const res = await cartStore.getListItem().then(res => {
-            console.log(res.cart.items);
             listProduct.value = res.cart.items.map((item, index) => ({
                 ...item,
-                product: item.book_variant.book.title,
+                product: item.book_variant.book.title + ' - ' + item.book_variant.edition,
                 quantity: item.quantity,
                 price: item.book_variant.price,
             }));
-            // listProduct.value = res;
         }).catch(error => {
             console.log(error);
         });
@@ -321,6 +321,25 @@ const getListItemInCart = async () => {
         console.log(error);
     }
     loadingTable.value = false; // Kết thúc loading
+};
+
+const removeItemFromCart = async (item) => {
+    loadingTable.value = true;
+    await cartStore.removeItemFromCart(item).then(res => {
+        message.destroy();
+        message.success('Xóa sản phẩm thành công!');
+    }).catch(error => {
+        console.log(error);
+    });
+
+    // Gọi lại API để lấy danh sách sản phẩm mới
+    await getListItemInCart().then(res => {
+    }).catch(error => {
+        console.log(error);
+    }).finally(() => {
+        calculateTotal();
+    });
+    loadingTable.value = false;
 };
 
 const createAddress = async (address) => {
@@ -504,7 +523,8 @@ const createOrder = async () => {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: white;
             border-radius: 8px;
-            width: 50%;
+            width: 60%;
+            min-width: 800px;
         }
         .shipping-infomation{
             background-color: white;
